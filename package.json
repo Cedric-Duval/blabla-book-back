@@ -1,0 +1,27 @@
+{
+  "name": "apotheose_back",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000b\u0000l\u0000a\u0000b\u0000l\u0000a\u0000-\u0000b\u0000o\u0000o\u0000k\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/O-clock-Samoussas/blabla-book-back.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/O-clock-Samoussas/blabla-book-back/issues"
+  },
+  "homepage": "https://github.com/O-clock-Samoussas/blabla-book-back#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "ts-node-dev": "^2.0.0"
+  }
+}
