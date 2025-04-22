@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "model:test": "node --loader ts-node/esm --no-warnings src/models/models.test.ts",
     "db:create": "psql -U blablabook -d blablabook -f ./src/migrations/create_tables.sql",
     "db:seed": "psql -U blablabook -d blablabook -f ./src/migrations/seeding_tables.sql"
   },
@@ -14,6 +15,7 @@
     "url": "git+https://github.com/O-clock-Samoussas/blabla-book-back.git"
   },
   "author": "",
+  "type": "module",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/O-clock-Samoussas/blabla-book-back/issues"
@@ -22,6 +24,7 @@
   "dependencies": {
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "pg": "^8.14.1",
     "sequelize": "^6.37.7"
   },
   "devDependencies": {

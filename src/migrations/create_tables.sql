@@ -39,7 +39,9 @@ CREATE TABLE "book" (
  "image" VARCHAR(500) NOT NULL,
  "pages" integer,
  "editor" VARCHAR(100),
- "publication_year" integer
+ "publication_year" integer,
+ "createdAt" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ "updatedAt" timestamptz
 );
 
 
