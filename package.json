@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "db:create": "psql -U blablabook -d blablabook -f ./src/migrations/create_tables.sql",
+    "db:seed": "psql -U blablabook -d blablabook -f ./src/migrations/seeding_tables.sql"
   },
   "repository": {
     "type": "git",
@@ -18,7 +20,9 @@
   },
   "homepage": "https://github.com/O-clock-Samoussas/blabla-book-back#readme",
   "dependencies": {
-    "express": "^5.1.0"
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "sequelize": "^6.37.7"
   },
   "devDependencies": {
     "@types/express": "^5.0.1",
