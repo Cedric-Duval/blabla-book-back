@@ -1,4 +1,4 @@
-import { Book } from './book.model.js';
+import { Book } from './association.model.js';
 
 //test de récupération de tous les livres
 const allBooks = await Book.findAll();
