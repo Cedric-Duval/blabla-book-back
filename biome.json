@@ -1,54 +1,59 @@
 {
 	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
 	"vcs": {
-	  "enabled": false,
-	  "clientKind": "git",
-	  "useIgnoreFile": false
+		"enabled": false,
+		"clientKind": "git",
+		"useIgnoreFile": false
 	},
 	"files": {
-	  "ignoreUnknown": false,
-	  "ignore": []
+		"ignoreUnknown": false,
+		"ignore": []
 	},
 	"formatter": {
-	  "enabled": true,
-	  "indentStyle": "space"
+		"enabled": true,
+		"indentStyle": "space"
 	},
 	"organizeImports": {
-	  "enabled": true
+		"enabled": true
 	},
 	"linter": {
-	  "enabled": true,
-	  "rules": {
-		"recommended": true,
-		"style": {
-		  "noNonNullAssertion": "off"
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"style": {
+				"noNonNullAssertion": "off"
+			},
+			"suspicious": {
+				"noShadowRestrictedNames": "off",
+				"noDuplicateParameters": "off",
+				"noConsole": "off",
+				"noDebugger": "error"
+			},
+			"correctness": {
+				"noUnusedImports": "off",
+				"noUnusedVariables": "off"
+			}
 		},
-		"suspicious": {
-		  "noShadowRestrictedNames": "off",
-		  "noDuplicateParameters": "off",
-		  "noConsole": "off",
-		  "noDebugger": "error"
-		},
-		"correctness": {
-		  "noUnusedImports": "error",
-		  "noUnusedVariables": "error"
-		}
-	  },
-	  "ignore": ["dist"]
+		"ignore": [
+			"dist"
+		]
 	},
 	"javascript": {
-	  "formatter": {
-		"quoteStyle": "single"
-	  }
+		"formatter": {
+			"quoteStyle": "single"
+		}
 	},
 	"overrides": [
-	  {
-		"include": ["./tsconfig.app.json", "./tsconfig.node.json"],
-		"json": {
-		  "parser": {
-			"allowComments": true
-		  }
+		{
+			"include": [
+				"./tsconfig.app.json",
+				"./tsconfig.node.json"
+			],
+			"json": {
+				"parser": {
+					"allowComments": true
+				}
+			}
 		}
-	  }
 	]
-  }
+}

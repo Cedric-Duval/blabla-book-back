@@ -13,5 +13,6 @@ Genre.init(
   {
     sequelize,
     tableName: 'genre',
+    timestamps: false,
   },
 );
