@@ -15,4 +15,19 @@ export const bookController = {
       res.status(500).json('Erreur interne du serveur');
     }
   },
+
+  async getOneBookById(req, res) {
+    try {
+
+      const { id } = req.params;
+      const oneBook = await Book.findByPk(id);
+      console.log(JSON.stringify(oneBook, null, 2));
+      res.status(200).json(oneBook);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json('Erreur interne du serveur');
+    }
+  },
+
+
 };
