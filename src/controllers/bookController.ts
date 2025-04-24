@@ -20,7 +20,7 @@ export const bookController = {
     try {
       const allBooks = await Book.findAll({
         order: [
-          ['publication_year', 'DESC']               // Most recently added to database showed first
+          ['publication_year', 'DESC']
         ]
       });
       console.log(JSON.stringify(allBooks, null, 2));
