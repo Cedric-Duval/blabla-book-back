@@ -1,0 +1,3 @@
+//----------------------------------------------------POKEMONS-------------------------------------------------------------
+### Récupération de 5 livre aléatoires de la liste
+GET http://localhost:3000/random-books
