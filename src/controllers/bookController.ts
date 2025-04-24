@@ -18,14 +18,18 @@ export const bookController = {
 
   async getAllBooks(req, res) {
     try {
-      const allBooks = await Book.findAll();
+      const allBooks = await Book.findAll({
+        order: [
+          ['createdAt', 'DESC']               // Most recently added to database showed first
+        ]
+      });
       console.log(JSON.stringify(allBooks, null, 2));
       res.status(200).json(allBooks);
     } catch (error) {
       console.log(error);
       res.status(500).json('Erreur interne du serveur')
     }
-  }
+  },
 
   async getOneBookById(req, res) {
     try {
