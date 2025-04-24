@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { bookController } from './controllers/bookController.js';
-import { libaryController } from './controllers/libraryController.js';
+import { libraryController } from './controllers/libraryController.js';
 
 export const router = Router();
 
@@ -11,7 +11,7 @@ router.get('/book/:id', bookController.getOneBookById); // Nodemon bugged with R
 router.get('/books', bookController.getAllBooks);
 
 
-router.get('/library/:id', libaryController.getLibraryByUserId);
+router.get('/library/:id', libraryController.getLibraryByUserId);
 
 
 
