@@ -16,9 +16,11 @@ router.get('/libraries', libraryController.getLibrariesByUserId);
 
 router.post('/library', libraryController.createNewLibrary);
 
-router.get('/library/:id', libraryController.getLibraryById);
-router.patch('/library/:id', libraryController.updateLibraryName);
-router.delete('/library/:id', libraryController.deleteLibrary);
+router
+  .route('/library/:id')
+  .get(libraryController.getLibraryById)
+  .patch(libraryController.updateLibraryName)
+  .delete(libraryController.deleteLibrary);
 
 router.post('/admin/book', adminController.createBook);
 
