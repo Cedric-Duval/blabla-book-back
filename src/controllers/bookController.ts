@@ -6,7 +6,7 @@ export const bookController = {
     try {
       const randomBooks = await Book.findAll({
         order: Sequelize.literal('RANDOM()'), //  Randomize order
-        limit: 5
+        limit: 5,
       });
       console.log(JSON.stringify(randomBooks, null, 2));
       res.status(200).json(randomBooks);
@@ -19,22 +19,20 @@ export const bookController = {
   async getAllBooks(req, res) {
     try {
       const allBooks = await Book.findAll({
-        order: [
-          ['publication_year', 'DESC']
-        ]
+        order: [['publication_year', 'DESC']],
       });
       console.log(JSON.stringify(allBooks, null, 2));
       res.status(200).json(allBooks);
     } catch (error) {
       console.log(error);
-      res.status(500).json('Erreur interne du serveur')
+      res.status(500).json('Erreur interne du serveur');
     }
   },
 
   async getOneBookById(req, res) {
     try {
-
       const { id } = req.params;
+      console.log(id);
       const oneBook = await Book.findByPk(id);
       console.log(JSON.stringify(oneBook, null, 2));
       res.status(200).json(oneBook);
@@ -43,6 +41,4 @@ export const bookController = {
       res.status(500).json('Erreur interne du serveur');
     }
   },
-
-
 };

@@ -1,8 +1,15 @@
 import 'dotenv/config';
+import cors from 'cors';
 import express from 'express';
 import { router } from './router.js';
 
 const app = express();
+
+app.use(
+  cors({
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+  }),
+);
 
 const port = process.env.PORT || 3000;
 
