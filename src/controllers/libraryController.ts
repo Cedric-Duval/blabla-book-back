@@ -5,6 +5,9 @@ import { ZodError } from "zod";
 
 
 export const libraryController = {
+
+
+    //Get all the libraries from the user
     async getLibrariesByUserId(req, res) {
         try {
             const { id } = req.user.id; // Get the user_id through JWT auth middleware (not done yet)
@@ -18,6 +21,7 @@ export const libraryController = {
         }
     },
 
+    //Get a single library from its ID
     async getLibraryById(req, res) {
         try {
             const { id } = req.params;
@@ -70,6 +74,7 @@ export const libraryController = {
             if(!userLibrary) {
                 return res.status(404).json('Bibliothèque non trouvée');
             }
+            //Check if the user is the owner of the library ?
             await userLibrary.destroy();
             res.status(200).json('Bibliothèque supprimée avec succès')
         } catch (error) {
