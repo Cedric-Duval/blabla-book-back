@@ -11,12 +11,11 @@ router.get('/book/:id', bookController.getOneBookById); // Nodemon bugged with R
 router.get('/books', bookController.getAllBooks);
 
 
-router.get('/user/:id/libraries', libraryController.getLibrariesByUserId);
+router.get('/libraries', libraryController.getLibrariesByUserId);
 
 router.post('/library', libraryController.createNewLibrary);
 router.get('/library/:id', libraryController.getLibraryById);
 router.patch('/library/:id', libraryController.updateLibraryName);
-
 
 
 

@@ -7,7 +7,7 @@ import { ZodError } from "zod";
 export const libraryController = {
     async getLibrariesByUserId(req, res) {
         try {
-            const { id } = req.params;
+            const { id } = req.user.id; // Get the user_id through JWT auth middleware (not done yet)
             const userLibraries = await Library.findAll({
                 where: { user_id: id }
             });
