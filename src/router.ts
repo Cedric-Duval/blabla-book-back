@@ -28,6 +28,6 @@ router
 
 router
   .route('/library/:libraryId/book/:bookId')
-  .post(libaryController.addBookToLibrary)
-  .patch(libaryController.editBookStatus)
-  .delete(libaryController.deleteBook);
+  .post(libraryController.addBookToLibrary)
+  .patch(libraryController.editBookStatus)
+  .delete(libraryController.deleteBook);

@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-import { Book, Library, User } from '../models/association.model.js'
+import { Book, Library, LibraryBook, User } from '../models/association.model.js'
 import { libraryCreateSchema, libraryUpdateSchema } from "../schemas/library.schema.js";
 import { ZodError } from "zod";
 
