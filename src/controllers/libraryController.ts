@@ -5,11 +5,11 @@ import { ZodError } from "zod";
 
 
 export const libraryController = {
-    async getLibraryByUserId(req, res) {
+    async getLibrariesByUserId(req, res) {
         try {
             const { id } = req.params;
             console.log(id);
-            const userLibrary = await Library.findOne({
+            const userLibrary = await Library.findAll({
                 where: { user_id: id }
             });
             console.log(JSON.stringify(userLibrary, null, 2));
