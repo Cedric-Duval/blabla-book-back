@@ -77,4 +77,22 @@ export const libaryController = {
       res.status(500).json('Erreur interne du serveur');
     }
   },
+
+  async deleteBook(req, res) {
+    try {
+      const { libraryId, bookId } = req.params;
+      await LibraryBook.destroy({
+        where: {
+          library_id: libraryId,
+          book_id: bookId,
+        },
+      });
+      res
+        .status(200)
+        .json({ message: 'Livre correctement supprimé de la bibliothèque' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json('Erreur interne du serveur');
+    }
+  },
 };

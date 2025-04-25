@@ -23,4 +23,5 @@ router
 router
   .route('/library/:libraryId/book/:bookId')
   .post(libaryController.addBookToLibrary)
-  .patch(libaryController.editBookStatus);
+  .patch(libaryController.editBookStatus)
+  .delete(libaryController.deleteBook);
