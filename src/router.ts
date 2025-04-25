@@ -29,4 +29,5 @@ router
 
 router
   .route('/user')
-  .get(userController.getUserDatas);
+  .get(userController.getUserDatas)
+  .patch(userController.updateUserDatas);
