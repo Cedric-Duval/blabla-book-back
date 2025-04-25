@@ -56,3 +56,26 @@ PATCH http://localhost:3000/library/1/book/34
 
 ###Delete a book in a library 
 DELETE http://localhost:3000/library/1/book/34
+
+
+
+//----------------------------------------------------AUTHENTIFICATION-------------------------------------------------------------
+###Create user 
+POST http://localhost:3000/register
+Content-Type: application/json
+
+{
+    "name": "Wayne",
+    "firstname": "Bruce",
+    "email": "test@gmail.com",
+    "password": "test"
+}
+
+###Login user
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "email": "test@gmail.com",
+    "password": "test"
+}
