@@ -25,3 +25,9 @@ router
   .route('/admin/book/:id')
   .patch(adminController.editBook)
   .delete(adminController.deleteBook);
+
+router
+  .route('/library/:libraryId/book/:bookId')
+  .post(libaryController.addBookToLibrary)
+  .patch(libaryController.editBookStatus)
+  .delete(libaryController.deleteBook);
