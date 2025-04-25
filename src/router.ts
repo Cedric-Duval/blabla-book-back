@@ -12,7 +12,7 @@ router.get('/books', bookController.getAllBooks);
 
 
 router.get('/library/:id', libraryController.getLibraryByUserId);
-
+router.patch('/library/:id', libraryController.updateLibraryName);
 
 
 
