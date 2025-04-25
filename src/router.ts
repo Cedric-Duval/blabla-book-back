@@ -33,3 +33,5 @@ router
   .delete(libraryController.deleteBook);
 
 router.post('/register', authController.register);
+
+router.post('/login', authController.login);

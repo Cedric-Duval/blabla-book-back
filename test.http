@@ -70,3 +70,12 @@ Content-Type: application/json
     "email": "test@gmail.com",
     "password": "test"
 }
+
+###Login user
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "email": "test@gmail.com",
+    "password": "test"
+}
