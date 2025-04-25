@@ -13,6 +13,7 @@ router.get('/books', bookController.getAllBooks);
 
 router.get('/user/:id/libraries', libraryController.getLibrariesByUserId);
 
+router.post('/library', libraryController.createNewLibrary);
 router.get('/library/:id', libraryController.getLibraryById);
 router.patch('/library/:id', libraryController.updateLibraryName);
 
