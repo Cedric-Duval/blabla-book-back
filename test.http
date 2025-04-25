@@ -41,3 +41,10 @@ Content-Type: application/json
 
 ###Delete a book in database 
 DELETE http://localhost:3000/admin/book/37
+
+
+
+
+//----------------------------------------------------LIBRARY-------------------------------------------------------------
+###Add a book in a library 
+POST http://localhost:3000/library/1/book/17
