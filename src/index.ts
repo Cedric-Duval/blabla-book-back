@@ -11,10 +11,11 @@ app.use(
   }),
 );
 
-const port = process.env.PORT || 3000;
+app.use(express.json());
 
 app.use(router);
 
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Blabla Book - listening on port ${port}`);
 });
