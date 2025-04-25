@@ -8,10 +8,20 @@ export const libraryController = {
     async getLibrariesByUserId(req, res) {
         try {
             const { id } = req.params;
-            console.log(id);
-            const userLibrary = await Library.findAll({
+            const userLibraries = await Library.findAll({
                 where: { user_id: id }
             });
+            console.log(JSON.stringify(userLibraries, null, 2));
+            res.status(200).json(userLibraries);
+        } catch (error) {
+            res.status(500).json('Erreur interne du serveur');
+        }
+    },
+
+    async getLibraryById(req, res) {
+        try {
+            const { id } = req.params;
+            const userLibrary = await Library.findByPk(id);
             console.log(JSON.stringify(userLibrary, null, 2));
             res.status(200).json(userLibrary);
         } catch (error) {
