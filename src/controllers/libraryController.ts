@@ -25,7 +25,11 @@ export const libraryController = {
     async getLibraryById(req, res) {
         try {
             const { id } = req.params;
-            const userLibrary = await Library.findByPk(id);
+            const userLibrary = await Library.findByPk(id, {
+                include: {
+                    model: Book
+                }
+            });
             console.log(JSON.stringify(userLibrary, null, 2));
             res.status(200).json(userLibrary);
         } catch (error) {
