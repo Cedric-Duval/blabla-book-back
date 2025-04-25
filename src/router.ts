@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { adminController } from './controllers/adminController.js';
+import { userController } from './controllers/userController.js';
 import { bookController } from './controllers/bookController.js';
 import { libraryController } from './controllers/libraryController.js';
 
@@ -14,14 +15,18 @@ router.get('/books', bookController.getAllBooks);
 router.get('/libraries', libraryController.getLibrariesByUserId);
 
 router.post('/library', libraryController.createNewLibrary);
+
 router.get('/library/:id', libraryController.getLibraryById);
 router.patch('/library/:id', libraryController.updateLibraryName);
 router.delete('/library/:id', libraryController.deleteLibrary);
 
 router.post('/admin/book', adminController.createBook);
 
-
 router
   .route('/admin/book/:id')
   .patch(adminController.editBook)
   .delete(adminController.deleteBook);
+
+router
+  .route('/user')
+  .get(userController.getUserDatas);
