@@ -31,3 +31,9 @@ router
   .route('/user')
   .get(userController.getUserDatas)
   .patch(userController.updateUserDatas);
+
+router
+  .route('/library/:libraryId/book/:bookId')
+  .post(libraryController.addBookToLibrary)
+  .patch(libraryController.editBookStatus)
+  .delete(libraryController.deleteBook);

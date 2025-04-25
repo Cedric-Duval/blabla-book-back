@@ -38,4 +38,4 @@ Genre.belongsToMany(Book, {
   timestamps: false,
 });
 
-export { Book, Genre, Library, User };
+export { Book, Genre, Library, LibraryBook, User };
