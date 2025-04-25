@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { adminController } from './controllers/adminController.js';
+import { authController } from './controllers/authController.js';
 import { bookController } from './controllers/bookController.js';
 import { libraryController } from './controllers/libraryController.js';
 
@@ -20,7 +21,6 @@ router.delete('/library/:id', libraryController.deleteLibrary);
 
 router.post('/admin/book', adminController.createBook);
 
-
 router
   .route('/admin/book/:id')
   .patch(adminController.editBook)
@@ -31,3 +31,5 @@ router
   .post(libraryController.addBookToLibrary)
   .patch(libraryController.editBookStatus)
   .delete(libraryController.deleteBook);
+
+router.post('/register', authController.register);
