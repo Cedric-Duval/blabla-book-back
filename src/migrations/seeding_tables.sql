@@ -11,7 +11,7 @@ VALUES
 INSERT INTO "library"
     ("name", "user_id")
 VALUES
-    ('Bibliothèque de Toto', 1)
+    ('Bibliothèque de Toto', 1),
 ;
 
 
@@ -26,7 +26,7 @@ VALUES
     (9782070518531, 'Harry Potter et la Coupe de feu', 'JK Rowling', 'Harry est mystérieusement inscrit au Tournoi des Trois Sorciers, une compétition dangereuse. Il doit affronter des épreuves périlleuses tout en découvrant un complot.', 'https://m.media-amazon.com/images/I/91huviltGUL._AC_UF1000,1000_QL80_.jpg', 656, 'Gallimard Jeunesse', 2000),
     (9782070541270, 'Harry Potter et l''Ordre du Phénix', 'JK Rowling', 'Face au retour de Voldemort, Harry rejoint l''Ordre du Phénix. Il doit faire face à l''incrédulité du ministère et à une nouvelle professeure tyrannique', 'https://m.media-amazon.com/images/I/51ww5Q085BL._AC_UF1000,1000_QL80_.jpg', 984, 'Gallimard Jeunesse', 2003),
     (9782070612413, 'Harry Potter et le Prince de sang-mêlé', 'JK Rowling', 'Dumbledore montre à Harry des souvenirs clés pour comprendre Voldemort. Pendant ce temps, des événements sombres se déroulent à Poudlard.', 'https://m.media-amazon.com/images/I/A130pKUtoeL._AC_UF1000,1000_QL80_.jpg', 720, 'Gallimard Jeunesse', 2005),
-    (9782070612758, 'Harry Potter et les Reliques de la Mort', 'JK Rowling', 'Harry, Ron et Hermione quittent Poudlard pour détruire les Horcruxes restants et vaincre Voldemort une fois pour toutes.', 'https://static.fnac-static.com/multimedia/PE/Images/FR/NR/86/76/1e/1996422/1540-1/tsp20240921072741/Harry-potter-et-les-reliques-de-la-mort.jpg', 816, 'Gallimard Jeunesse', 2007),
+    (9782070612758, 'Harry Potter et les Reliques de la Mort', 'JK Rowling', 'Harry, Ron et Hermione quittent Poudlard pour détruire les Horcruxes restants et vaincre Voldemort une fois pour toutes.', 'https://m.media-amazon.com/images/I/71cismcCmGL._AC_UF1000,1000_QL80_.jpg', 816, 'Gallimard Jeunesse', 2007),
     (9782070388228, 'Le Grand Meaulnes', 'Alain-Fournier', 'Un roman d''initiation où un adolescent découvre un monde mystérieux et l''amour idéalisé.', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8Ai0Te8DzPg73Bc8HtCUojHT5j60Uktayzw&s', 320, 'Émile-Paul Frères', 1913),
     (9782070368229, 'Ne tirez pas sur l''oiseau moqueur', 'Harper Lee', 'Une jeune fille observe les injustices raciales à travers le procès de son père avocat.', 'https://media.hachette.fr/fit-in/780x1280/imgArticle/GRASSETFASQUELLE/2015/9782246857730-001-X.jpeg?source=web', 384, 'J. B. Lippincott & Co', 1961),
     (9782070368221, 'L''Étranger', 'Albert Camus', 'Meursault, un homme indifférent au monde, commet un meurtre et fait face à l''absurdité de la vie.', 'https://m.media-amazon.com/images/I/8130inT26AL.jpg', 184, 'Edition Gallimard', 1942),
