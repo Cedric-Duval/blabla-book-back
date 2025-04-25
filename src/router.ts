@@ -14,3 +14,8 @@ router.get('/books', bookController.getAllBooks);
 //router.get('/library/:id');
 
 router.post('/admin/book', adminController.createBook);
+
+router
+  .route('/admin/book/:id')
+  .patch(adminController.editBook)
+  .delete(adminController.deleteBook);
