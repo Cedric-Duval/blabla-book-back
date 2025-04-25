@@ -38,4 +38,43 @@ export const libaryController = {
       res.status(500).json('Erreur interne du serveur');
     }
   },
+
+  async editBookStatus(req, res) {
+    try {
+      const { libraryId, bookId } = req.params;
+
+      const currentLibraryBook = await LibraryBook.findOne({
+        where: {
+          library_id: libraryId,
+          book_id: bookId,
+        },
+      });
+
+      let bookStatus = currentLibraryBook.read;
+
+      if (bookStatus) {
+        bookStatus = false;
+      } else {
+        bookStatus = true;
+      }
+
+      await currentLibraryBook?.update({
+        read: bookStatus,
+      });
+
+      const currentLibrary = await Library.findOne({
+        where: {
+          id: libraryId,
+        },
+        include: {
+          model: Book,
+        },
+      });
+
+      res.status(200).json(currentLibrary);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json('Erreur interne du serveur');
+    }
+  },
 };

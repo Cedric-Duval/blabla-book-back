@@ -22,4 +22,5 @@ router
 
 router
   .route('/library/:libraryId/book/:bookId')
-  .post(libaryController.addBookToLibrary);
+  .post(libaryController.addBookToLibrary)
+  .patch(libaryController.editBookStatus);

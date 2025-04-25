@@ -47,4 +47,8 @@ DELETE http://localhost:3000/admin/book/37
 
 //----------------------------------------------------LIBRARY-------------------------------------------------------------
 ###Add a book in a library 
-POST http://localhost:3000/library/1/book/17
+POST http://localhost:3000/library/1/book/30
+
+
+###Edit status of a book in a library 
+PATCH http://localhost:3000/library/1/book/30
