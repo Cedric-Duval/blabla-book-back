@@ -29,33 +29,40 @@ Content-Type: application/json
 
 
 ###Edit a book in database 
-PATCH http://localhost:3000/admin/book/36
+PATCH http://localhost:3000/admin/book/38
 Content-Type: application/json
 
 {
-    "title": "Test modification - Toto l'école est finie",
+    "title": "Test modification 2- Toto l'école est finie",
     "pages": 125,
     "editor": "Tourbillon2"
 }
 
 
 ###Delete a book in database 
-DELETE http://localhost:3000/admin/book/37
+DELETE http://localhost:3000/admin/book/38
 
 
 
 
 //----------------------------------------------------LIBRARY-------------------------------------------------------------
+### Get all libraries by user id (without books)
+GET http://localhost:3000/user/1/libraries
+
+###Create library for one user
+POST http://localhost:3000/library/1/book/5
+
+
 ###Add a book in a library 
-POST http://localhost:3000/library/1/book/27
+POST http://localhost:3000/library/1/book/5
 
 
 ###Edit status of a book in a library 
-PATCH http://localhost:3000/library/1/book/34
+PATCH http://localhost:3000/library/1/book/5
 
 
 ###Delete a book in a library 
-DELETE http://localhost:3000/library/1/book/34
+DELETE http://localhost:3000/library/1/book/5
 
 
 
@@ -77,5 +84,22 @@ Content-Type: application/json
 
 {
     "email": "test@gmail.com",
+    "password": "test"
+}
+
+
+//----------------------------------------------------USER-------------------------------------------------------------
+### Get one user (User 1 hardcoded in the controller, MUST be changed for production.)
+GET http://localhost:3000/user
+
+
+###Edit an user  (User 1 hardcoded in the controller, MUST be changed for production.)
+PATCH http://localhost:3000/user
+Content-Type: application/json
+
+{
+    "name": "Toto",
+    "firstname": "Tatad",
+    "email": "toto.tata@gmail.com",
     "password": "test"
 }

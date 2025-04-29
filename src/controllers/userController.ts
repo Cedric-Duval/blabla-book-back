@@ -6,7 +6,7 @@ import { userDatasUpdate } from '../schemas/user.schema.js';
 export const userController = {
   async getUserDatas(req, res) {
     try {
-      const id = req.user.id;
+      const id = req.user?.id || 1;
       const user = await User.findByPk(id, {
         attributes: { exclude: ['password'] },
       });
@@ -21,8 +21,9 @@ export const userController = {
 
   async updateUserDatas(req, res) {
     try {
-      const id = req.user.id; // Get the user_id through JWT auth middleware (not done yet)
+      const id = req.user?.id || 1; // Get the user_id through JWT auth middleware (not done yet)
       const updatedDatas = req.body;
+      console.log(updatedDatas);
       await userDatasUpdate.parseAsync(updatedDatas);
       const user = await User.findByPk(id);
       if (!user) {
