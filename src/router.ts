@@ -13,7 +13,9 @@ router.get('/book/:id', bookController.getOneBookById); // Nodemon bugged with R
 
 router.get('/books', bookController.getAllBooks);
 
-router.get('/user/:id/libraries', libraryController.getLibrariesByUserId);
+router.get('/user/:id/libraries', libraryController.getLibrariesWithoutBooksByUserId);
+router.get('/user/:id/libraries/books', libraryController.getLibrariesWithBooksByUserId);
+
 
 router.post('/library', libraryController.createNewLibrary);
 
