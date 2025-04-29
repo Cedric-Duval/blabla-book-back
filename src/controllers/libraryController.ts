@@ -13,11 +13,28 @@ import {
 
 export const libraryController = {
     //Get all the libraries from the user
-    async getLibrariesByUserId(req, res) {
+    async getLibrariesWithoutBooksByUserId(req, res) {
         try {
             const { id } = req.params; // Get the user_id through JWT auth middleware (not done yet), req.user.id
             const userLibraries = await Library.findAll({
                 where: { user_id: id }
+            });
+            console.log(JSON.stringify(userLibraries, null, 2));
+            res.status(200).json(userLibraries);
+        } catch (error) {
+            res.status(500).json('Erreur interne du serveur');
+        }
+    },
+
+    //Get all the libraries from the user
+    async getLibrariesWithBooksByUserId(req, res) {
+        try {
+            const { id } = req.params; // Get the user_id through JWT auth middleware (not done yet), req.user.id
+            const userLibraries = await Library.findAll({
+                where: { user_id: id },
+                include: {
+                    model: Book  
+                }
             });
             console.log(JSON.stringify(userLibraries, null, 2));
             res.status(200).json(userLibraries);
