@@ -1,12 +1,17 @@
-import { Sequelize } from "sequelize";
-import { Book, Library, LibraryBook, User } from '../models/association.model.js'
-import { libraryCreateSchema, libraryUpdateSchema } from "../schemas/library.schema.js";
-import { ZodError } from "zod";
-
+import { Sequelize } from 'sequelize';
+import { ZodError } from 'zod';
+import {
+  Book,
+  Library,
+  LibraryBook,
+  User,
+} from '../models/association.model.js';
+import {
+  libraryCreateSchema,
+  libraryUpdateSchema,
+} from '../schemas/library.schema.js';
 
 export const libraryController = {
-
-
     //Get all the libraries from the user
     async getLibrariesByUserId(req, res) {
         try {
@@ -85,8 +90,8 @@ export const libraryController = {
             res.status(500).json('Erreur interne du serveur');
         }
     },
-  
-    async addBookToLibrary(req, res) {
+      
+  async addBookToLibrary(req, res) {
     try {
       const { libraryId, bookId } = req.params;
       await LibraryBook.create({
