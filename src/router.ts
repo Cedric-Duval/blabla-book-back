@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { adminController } from './controllers/adminController.js';
 import { authController } from './controllers/authController.js';
-import { userController } from './controllers/userController.js';
 import { bookController } from './controllers/bookController.js';
 import { libraryController } from './controllers/libraryController.js';
+import { userController } from './controllers/userController.js';
 
 export const router = Router();
 
@@ -22,7 +22,6 @@ router
   .get(libraryController.getLibraryById)
   .patch(libraryController.updateLibraryName)
   .delete(libraryController.deleteLibrary);
-
 
 router.post('/admin/book', adminController.createBook);
 
