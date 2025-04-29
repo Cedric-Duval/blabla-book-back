@@ -10,7 +10,7 @@ export const libraryController = {
     //Get all the libraries from the user
     async getLibrariesByUserId(req, res) {
         try {
-            const { id } = req.user.id; // Get the user_id through JWT auth middleware (not done yet)
+            const { id } = req.params; // Get the user_id through JWT auth middleware (not done yet), req.user.id
             const userLibraries = await Library.findAll({
                 where: { user_id: id }
             });
