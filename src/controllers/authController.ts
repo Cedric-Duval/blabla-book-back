@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import { User } from '../models/association.model.js';
 import { createUser } from '../schemas/createUser.schema.js';
+import { loginUser } from '../schemas/loginUser.schema.js';
 
 export const authController = {
   async register(req, res) {
@@ -35,7 +36,6 @@ export const authController = {
       res.status(201).json(newUser);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        // Si l'erreur vient de la validation Zod, retourne les détails
         const zodErrors = error.errors.map((err) => ({
           field: err.path[0],
           message: err.message,
@@ -49,29 +49,62 @@ export const authController = {
   },
 
   async login(req, res) {
-    const { email, password } = req.body;
-    const user = await User.findOne({ where: { email: email } });
+    try {
+      const parsedData = loginUser.parse(req.body);
 
-    if (!user) {
-      return res.status(401).json({ message: 'Utilisateur inconnu' });
+      const currentUser = await User.findOne({
+        where: { email: parsedData.email },
+      });
+
+      if (!currentUser) {
+        return res.status(400).json({
+          errors: [
+            {
+              field: 'email',
+              message: 'Aucun adresse mail correspondante.',
+            },
+          ],
+        });
+      }
+
+      const validatedPassword = await bcrypt.compare(
+        parsedData.password,
+        currentUser.password,
+      );
+
+      if (!validatedPassword) {
+        return res.status(400).json({
+          errors: [
+            {
+              field: 'password',
+              message: 'Mot de passe invalide.',
+            },
+          ],
+        });
+      }
+
+      if (!process.env.JWT_SECRET) {
+        throw new Error("JWT_SECRET n'est pas défini dans le fichier .env");
+      }
+
+      const token = jwt.sign(
+        { id: currentUser.id, email: currentUser.email },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' },
+      );
+
+      res.status(200).json({ token, currentUser });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const zodErrors = error.errors.map((err) => ({
+          field: err.path[0],
+          message: err.message,
+        }));
+        return res.status(400).json({ errors: zodErrors });
+      }
+
+      console.error(error);
+      res.status(500).json('Erreur interne du serveur');
     }
-
-    const validatedPassword = await bcrypt.compare(password, user.password);
-
-    if (!validatedPassword) {
-      return res.status(401).json({ message: 'Mot de passe incorrect' });
-    }
-
-    if (!process.env.JWT_SECRET) {
-      throw new Error("JWT_SECRET n'est pas défini dans le fichier .env");
-    }
-
-    const token = jwt.sign(
-      { id: user.id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' },
-    );
-
-    res.status(200).json({ token, user });
   },
 };
