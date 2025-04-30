@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize';
 import { ZodError } from 'zod';
 import { Book } from '../models/association.model.js';
-import { paramsIdSchema } from '../schemas/idBook.schema.js';
+import { paramsIdSchema } from '../schemas/paramsId.schema.js';
 
 export const bookController = {
   async getFiveRandomBooks(req, res) {

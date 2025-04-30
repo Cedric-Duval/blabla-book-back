@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const createBook = z.object({
+export const createBookSchema = z.object({
   isbn: z
     .string()
     .regex(/^[1-9]\d*$/)
@@ -16,5 +16,8 @@ export const createBook = z.object({
     .number()
     .int()
     .min(1, 'La date est requise')
-    .max(new Date().getFullYear()),
+    .max(
+      new Date().getFullYear(),
+      "La date ne peut être supérieur à l'année en cours",
+    ),
 });
