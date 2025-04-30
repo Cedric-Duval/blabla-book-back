@@ -10,18 +10,22 @@ import {
   libraryCreateSchema,
   libraryUpdateSchema,
 } from '../schemas/library.schema.js';
+import { paramsIdSchema } from '../schemas/paramsId.schema.js';
 
 export const libraryController = {
   //Get all the libraries from the user
   async getLibrariesWithoutBooksByUserId(req, res) {
     try {
-      const { id } = req.params; // Get the user_id through JWT auth middleware (not done yet), req.user.id
+      const parsedData = paramsIdSchema.parse(req.params); // Get the user_id through JWT auth middleware (not done yet), req.user.id
       const userLibraries = await Library.findAll({
-        where: { user_id: id },
+        where: { user_id: parsedData.id },
       });
-      console.log(JSON.stringify(userLibraries, null, 2));
       res.status(200).json(userLibraries);
     } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ error: "Format d'url invalide" });
+      }
+      console.error(error);
       res.status(500).json('Erreur interne du serveur');
     }
   },

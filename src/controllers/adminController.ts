@@ -91,9 +91,9 @@ export const adminController = {
       res.status(200).json({ message: 'Livre correctement supprimé' });
     } catch (error) {
       if (error instanceof ZodError) {
-        return res
-          .status(400)
-          .json('Format des données de selection du livre non valide');
+        return res.status(400).json({
+          error: 'Format des données de selection du livre non valide',
+        });
       }
 
       console.error(error);
