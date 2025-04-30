@@ -46,8 +46,11 @@ DELETE http://localhost:3000/admin/book/38
 
 
 //----------------------------------------------------LIBRARY-------------------------------------------------------------
-### Get all libraries by user id (without books)
+### Get all libraries by user id (WITHOUT books)
 GET http://localhost:3000/user/1/libraries
+
+### Get all libraries by user id (WITH books)
+GET http://localhost:3000/user/1/libraries/books
 
 ###Create library for one user
 POST http://localhost:3000/library/1/book/5
@@ -64,6 +67,28 @@ PATCH http://localhost:3000/library/1/book/5
 ###Delete a book in a library 
 DELETE http://localhost:3000/library/1/book/5
 
+
+###Add a library for an user (User 1 hardcoded in the controller, MUST be changed for production.)
+POST http://localhost:3000/library
+Content-Type: application/json
+
+{
+    "name": "Bibliothèque 3"
+}
+
+### Get one library by id (with books)
+GET http://localhost:3000/library/3
+
+###Edit a library by id
+PATCH http://localhost:3000/library/3
+Content-Type: application/json
+
+{
+    "name": "Test modification 2"
+}
+
+### Delete a library by id
+DELETE http://localhost:3000/library/3
 
 
 //----------------------------------------------------AUTHENTIFICATION-------------------------------------------------------------
