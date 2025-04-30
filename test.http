@@ -7,7 +7,7 @@ GET http://localhost:3000/random-books
 GET http://localhost:3000/books
 
 ### Get one book by id
-GET http://localhost:3000/book/12
+GET http://localhost:3000/book/5
 
 
 
@@ -17,7 +17,7 @@ POST http://localhost:3000/admin/book
 Content-Type: application/json
 
 {
-    "isbn": 2848014115,
+    "isbn": "",
     "title": "Test ajout livre 3 - Toto l'école est finie",
     "author": "Serge Bloch",
     "summary": "Roi de la cour de récré, maître en l'art du zéro pointé, tout le monde connaît Toto ! Comment s'occupe Toto sur la route des vacances ? A quoi Toto reconnaît-il un motard heureux ? Impossible à deviner sans lire ces gags hilarants de Toto et sa bande de rigolos ! Une BD à se tordre de rire !",

@@ -1,13 +1,40 @@
 import { Sequelize } from 'sequelize';
+import { z } from 'zod';
 import { Book } from '../models/association.model.js';
+import { createBook } from '../schemas/createBook.schema.js';
 
 export const adminController = {
   async createBook(req, res) {
     try {
-      const inputDatas = req.body;
-      const newBook = await Book.create(inputDatas);
+      const parsedData = createBook.parse(req.body);
+      console.log(parsedData);
+
+      const existingBook = await Book.findOne({
+        where: { isbn: parsedData.isbn },
+      });
+
+      if (existingBook) {
+        return res.status(400).json({
+          errors: [
+            {
+              field: 'isbn',
+              message: 'Cet ISBN est déjà repertorié dans la base de données',
+            },
+          ],
+        });
+      }
+
+      const newBook = await Book.create(parsedData);
       res.status(201).json(newBook);
     } catch (error) {
+      if (error instanceof z.ZodError) {
+        const zodErrors = error.errors.map((err) => ({
+          field: err.path[0],
+          message: err.message,
+        }));
+        return res.status(400).json({ errors: zodErrors });
+      }
+
       console.error(error);
       res.status(500).json('Erreur interne du serveur');
     }

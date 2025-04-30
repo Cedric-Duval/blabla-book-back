@@ -9,7 +9,7 @@ export const router = Router();
 
 //BOOKS
 router.get('/books', bookController.getAllBooks);
-router.get('/book/:id', bookController.getOneBookById); // Nodemon bugged with Regex expression -> to fix ?
+router.get('/book/:id', bookController.getOneBookById);
 router.get('/random-books', bookController.getFiveRandomBooks);
 
 //ADMIN
