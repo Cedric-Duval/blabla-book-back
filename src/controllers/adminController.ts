@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize';
 import { z } from 'zod';
-import { Book } from '../models/association.model.js';
+import { ZodError } from 'zod';
+import { Book, LibraryBook } from '../models/association.model.js';
 import { createBookSchema } from '../schemas/createBook.schema.js';
 import { editBookSchema } from '../schemas/editBook.schema.js';
 import { paramsIdSchema } from '../schemas/paramsId.schema.js';
@@ -72,15 +73,29 @@ export const adminController = {
 
   async deleteBook(req, res) {
     try {
-      const id = req.params.id;
+      const parsedParams = paramsIdSchema.parse(req.params);
+
+      const currentBook = await Book.findByPk(parsedParams.id);
+
+      if (!currentBook) {
+        return res.status(404).json({ error: 'Livre introuvable' });
+      }
+
+      await LibraryBook.destroy({ where: { book_id: parsedParams.id } });
       await Book.destroy({
         where: {
-          id: id,
+          id: parsedParams.id,
         },
       });
 
       res.status(200).json({ message: 'Livre correctement supprimé' });
     } catch (error) {
+      if (error instanceof ZodError) {
+        return res
+          .status(400)
+          .json('Format des données de selection du livre non valide');
+      }
+
       console.error(error);
       res.status(500).json('Erreur interne du serveur');
     }

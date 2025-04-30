@@ -40,7 +40,7 @@ Content-Type: application/json
 
 
 ###Delete a book in database 
-DELETE http://localhost:3000/admin/book/38
+DELETE http://localhost:3000/admin/book/33
 
 
 
