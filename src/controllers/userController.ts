@@ -1,36 +1,52 @@
-import { Sequelize } from 'sequelize';
+import bcrypt from 'bcrypt';
 import { ZodError } from 'zod';
 import { User } from '../models/association.model.js';
-import { userDatasUpdate } from '../schemas/user.schema.js';
+import { userDatasUpdate, userIdSchema } from '../schemas/user.schema.js';
 
 export const userController = {
   async getUserDatas(req, res) {
     try {
-      const id = req.user?.id;
-      const user = await User.findByPk(id, {
+      const parsedData = userIdSchema.parse({ id: req.user?.id });
+      const user = await User.findByPk(parsedData.id, {
         attributes: { exclude: ['password'] },
       });
+
       if (!user) {
-        return res.status(404).json('Utilisateur non trouvé');
+        return res.status(404).json({ error: 'Utilisateur non trouvé' });
       }
+
       res.status(200).json(user);
     } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ error: "Format d'url invalide" });
+      }
+      console.error(error);
       res.status(500).json('Erreur interne du serveur');
     }
   },
 
   async updateUserDatas(req, res) {
     try {
-      const id = req.user?.id || 1; // Get the user_id through JWT auth middleware (not done yet)
+      const parsedData = userIdSchema.parse({ id: req.user?.id || 1 }); // Get the user_id through JWT auth middleware (not done yet)
       const updatedDatas = req.body;
-      console.log(updatedDatas);
+
       await userDatasUpdate.parseAsync(updatedDatas);
-      const user = await User.findByPk(id);
+
+      if (updatedDatas.password) {
+        const hashedPassword = await bcrypt.hash(updatedDatas.password, 10);
+        updatedDatas.password = hashedPassword;
+      }
+
+      const user = await User.findByPk(parsedData.id);
+
       if (!user) {
         return res.status(404).json('Utilisateur non trouvé');
       }
-      await user.update(updatedDatas);
-      res.status(200).json('Informations mises à jour avec succès');
+
+      const currentUser = await user.update(updatedDatas);
+      const { password, ...safeUser } = currentUser.get({ plain: true });
+
+      res.status(200).json(safeUser);
     } catch (error) {
       if (error instanceof ZodError) {
         return res.status(400).json('Format des données non valide');

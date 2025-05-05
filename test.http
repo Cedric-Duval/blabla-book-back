@@ -121,7 +121,6 @@ Content-Type: application/json
 
 {
     "name": "Toto",
-    "firstname": "Tatad",
-    "email": "toto.tata@gmail.com",
+    "firstname": "Tatas",
     "password": "test"
 }

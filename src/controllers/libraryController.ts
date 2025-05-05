@@ -1,11 +1,6 @@
 import { ZodError } from 'zod';
 import { z } from 'zod';
-import {
-  Book,
-  Library,
-  LibraryBook,
-  User,
-} from '../models/association.model.js';
+import { Book, Library, LibraryBook } from '../models/association.model.js';
 import {
   bookAndLibrarySchema,
   libraryCreateSchema,
