@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { ZodError } from 'zod';
-import { User } from '../models/association.model.js';
+import { User, Library, Book } from '../models/association.model.js';
 import { userDatasUpdate, userIdSchema } from '../schemas/user.schema.js';
 
 export const userController = {
@@ -9,6 +9,12 @@ export const userController = {
       const parsedData = userIdSchema.parse({ id: req.user?.id });
       const user = await User.findByPk(parsedData.id, {
         attributes: { exclude: ['password'] },
+        include: {
+          model: Library,
+          include: {
+            model: Book
+          }
+        }
       });
 
       if (!user) {
