@@ -19,7 +19,7 @@ export const authController = {
           errors: [
             {
               field: 'email',
-              message: 'Cette adresse mail est déjà utilisée.',
+              message: 'Cette adresse mail est déjà utilisée',
             },
           ],
         });

@@ -7,7 +7,7 @@ GET http://localhost:3000/random-books
 GET http://localhost:3000/books
 
 ### Get one book by id
-GET http://localhost:3000/book/12
+GET http://localhost:3000/book/30
 
 
 
@@ -17,47 +17,47 @@ POST http://localhost:3000/admin/book
 Content-Type: application/json
 
 {
-    "isbn": 2848014115,
-    "title": "Test ajout livre 3 - Toto l'école est finie",
+    "isbn": "1",
+    "title": "1",
     "author": "Serge Bloch",
     "summary": "Roi de la cour de récré, maître en l'art du zéro pointé, tout le monde connaît Toto ! Comment s'occupe Toto sur la route des vacances ? A quoi Toto reconnaît-il un motard heureux ? Impossible à deviner sans lire ces gags hilarants de Toto et sa bande de rigolos ! Une BD à se tordre de rire !",
     "image": "https://m.media-amazon.com/images/I/71DwQ+i0w0L._AC_UF1000,1000_QL80_.jpg",
     "pages": 111,
     "editor": "Tourbillon",
-    "publication_year": 2009
+    "publication_year": 2025
 }
 
 
 ###Edit a book in database 
-PATCH http://localhost:3000/admin/book/38
+PATCH http://localhost:3000/admin/book/33
 Content-Type: application/json
 
 {
-    "title": "Test modification 2- Toto l'école est finie",
-    "pages": 125,
+    "title": "s",
+    "pages": 1,
     "editor": "Tourbillon2"
 }
 
 
 ###Delete a book in database 
-DELETE http://localhost:3000/admin/book/38
+DELETE http://localhost:3000/admin/book/-33
 
 
 
 
 //----------------------------------------------------LIBRARY-------------------------------------------------------------
 ### Get all libraries by user id (WITHOUT books)
-GET http://localhost:3000/user/1/libraries
+GET http://localhost:3000/user/500/libraries
 
 ### Get all libraries by user id (WITH books)
 GET http://localhost:3000/user/1/libraries/books
 
 ###Create library for one user
-POST http://localhost:3000/library/1/book/5
+POST http://localhost:3000/library/10/book/5
 
 
 ###Add a book in a library 
-POST http://localhost:3000/library/1/book/5
+POST http://localhost:3000/library/2/book/33
 
 
 ###Edit status of a book in a library 
