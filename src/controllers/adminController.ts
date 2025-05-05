@@ -1,10 +1,8 @@
-import { Sequelize } from 'sequelize';
 import { z } from 'zod';
 import { ZodError } from 'zod';
 import { Book, LibraryBook } from '../models/association.model.js';
-import { createBookSchema } from '../schemas/createBook.schema.js';
-import { editBookSchema } from '../schemas/editBook.schema.js';
-import { paramsIdSchema } from '../schemas/paramsId.schema.js';
+import { createBookSchema, editBookSchema } from '../schemas/book.schema.js';
+import { paramsIdSchema } from '../schemas/params.schema.js';
 
 export const adminController = {
   async createBook(req, res) {
@@ -39,7 +37,7 @@ export const adminController = {
       }
 
       console.error(error);
-      res.status(500).json('Erreur interne du serveur');
+      res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   },
 
@@ -67,7 +65,7 @@ export const adminController = {
       }
 
       console.error(error);
-      res.status(500).json('Erreur interne du serveur');
+      res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   },
 
@@ -97,7 +95,7 @@ export const adminController = {
       }
 
       console.error(error);
-      res.status(500).json('Erreur interne du serveur');
+      res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   },
 };

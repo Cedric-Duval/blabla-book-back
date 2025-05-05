@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize';
 import { ZodError } from 'zod';
 import { Book } from '../models/association.model.js';
-import { paramsIdSchema } from '../schemas/paramsId.schema.js';
+import { paramsIdSchema } from '../schemas/params.schema.js';
 
 export const bookController = {
   async getFiveRandomBooks(req, res) {
@@ -13,7 +13,7 @@ export const bookController = {
       res.status(200).json(randomBooks);
     } catch (error) {
       console.error(error);
-      res.status(500).json('Erreur interne du serveur');
+      res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   },
 
@@ -26,7 +26,7 @@ export const bookController = {
       res.status(200).json(allBooks);
     } catch (error) {
       console.log(error);
-      res.status(500).json('Erreur interne du serveur');
+      res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   },
 
@@ -45,7 +45,7 @@ export const bookController = {
         return res.status(400).json({ error: "Format d'url invalide" });
       }
       console.error(error);
-      res.status(500).json('Erreur interne du serveur');
+      res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   },
 };
