@@ -10,3 +10,14 @@ export const libraryCreateSchema = z.object({
 export const libraryUpdateSchema = z.object({
   name: z.string().max(100).min(1, { message: 'Le nom est requis' }),
 });
+
+export const bookAndLibrarySchema = z.object({
+  libraryId: z
+    .string()
+    .regex(/^[1-9]\d*$/)
+    .transform(Number),
+  bookId: z
+    .string()
+    .regex(/^[1-9]\d*$/)
+    .transform(Number),
+});

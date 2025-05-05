@@ -47,21 +47,18 @@ DELETE http://localhost:3000/admin/book/-33
 
 //----------------------------------------------------LIBRARY-------------------------------------------------------------
 ### Get all libraries by user id (WITHOUT books)
-GET http://localhost:3000/user/500/libraries
+GET http://localhost:3000/user/1/libraries
 
 ### Get all libraries by user id (WITH books)
 GET http://localhost:3000/user/1/libraries/books
 
-###Create library for one user
-POST http://localhost:3000/library/10/book/5
-
 
 ###Add a book in a library 
-POST http://localhost:3000/library/2/book/33
+POST http://localhost:3000/library/1/book/17
 
 
 ###Edit status of a book in a library 
-PATCH http://localhost:3000/library/1/book/5
+PATCH http://localhost:3000/library/1/book/1
 
 
 ###Delete a book in a library 
@@ -73,11 +70,11 @@ POST http://localhost:3000/library
 Content-Type: application/json
 
 {
-    "name": "Bibliothèque 3"
+    "name": ""
 }
 
 ### Get one library by id (with books)
-GET http://localhost:3000/library/3
+GET http://localhost:3000/library/2
 
 ###Edit a library by id
 PATCH http://localhost:3000/library/3
@@ -88,7 +85,7 @@ Content-Type: application/json
 }
 
 ### Delete a library by id
-DELETE http://localhost:3000/library/3
+DELETE http://localhost:3000/library/2
 
 
 //----------------------------------------------------AUTHENTIFICATION-------------------------------------------------------------
