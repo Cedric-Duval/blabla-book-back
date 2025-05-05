@@ -14,6 +14,8 @@ export const adminController = {
         where: { isbn: parsedData.isbn },
       });
 
+      console.log(JSON.stringify(existingBook, null, 2));
+
       if (existingBook) {
         return res.status(400).json({
           errors: [

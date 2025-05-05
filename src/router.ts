@@ -39,7 +39,11 @@ router
   .post(libraryController.addBookToLibrary)
   .patch(libraryController.editBookStatus)
   .delete(libraryController.deleteBook);
-router.post('/library', libraryController.createNewLibrary);
+router.post(
+  '/library',
+  authMiddleware.authorization,
+  libraryController.createNewLibrary,
+);
 
 //AUTHENTIFICATION
 router.post('/register', authController.register);
