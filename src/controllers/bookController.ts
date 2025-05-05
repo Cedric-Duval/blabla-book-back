@@ -10,7 +10,6 @@ export const bookController = {
         order: Sequelize.literal('RANDOM()'), //  Randomize order
         limit: 5,
       });
-      console.log(JSON.stringify(randomBooks, null, 2));
       res.status(200).json(randomBooks);
     } catch (error) {
       console.error(error);

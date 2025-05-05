@@ -7,7 +7,7 @@ GET http://localhost:3000/random-books
 GET http://localhost:3000/books
 
 ### Get one book by id
-GET http://localhost:3000/book/33
+GET http://localhost:3000/book/30
 
 
 
@@ -47,13 +47,13 @@ DELETE http://localhost:3000/admin/book/-33
 
 //----------------------------------------------------LIBRARY-------------------------------------------------------------
 ### Get all libraries by user id (WITHOUT books)
-GET http://localhost:3000/user/1/libraries
+GET http://localhost:3000/user/500/libraries
 
 ### Get all libraries by user id (WITH books)
 GET http://localhost:3000/user/1/libraries/books
 
 ###Create library for one user
-POST http://localhost:3000/library/1/book/5
+POST http://localhost:3000/library/10/book/5
 
 
 ###Add a book in a library 

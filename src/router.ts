@@ -4,6 +4,7 @@ import { authController } from './controllers/authController.js';
 import { bookController } from './controllers/bookController.js';
 import { libraryController } from './controllers/libraryController.js';
 import { userController } from './controllers/userController.js';
+import { authMiddleware } from './middlewares/authMiddleware.js';
 
 export const router = Router();
 
@@ -47,5 +48,5 @@ router.post('/login', authController.login);
 //USER
 router
   .route('/user')
-  .get(userController.getUserDatas)
+  .get(authMiddleware.authorization, userController.getUserDatas)
   .patch(userController.updateUserDatas); // => Issue with updating only one field, password is not hashed.

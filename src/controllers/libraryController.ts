@@ -1,11 +1,13 @@
 import { Sequelize } from 'sequelize';
 import { ZodError } from 'zod';
+import { z } from 'zod';
 import {
   Book,
   Library,
   LibraryBook,
   User,
 } from '../models/association.model.js';
+import { createLibrary } from '../schemas/createLibrary.schema.js';
 import {
   libraryCreateSchema,
   libraryUpdateSchema,
@@ -20,6 +22,14 @@ export const libraryController = {
       const userLibraries = await Library.findAll({
         where: { user_id: parsedData.id },
       });
+
+      console.log(userLibraries);
+      if (!userLibraries[0]) {
+        return res
+          .status(404)
+          .json({ error: "Bibliothèque d'utilisateur introuvable" });
+      }
+
       res.status(200).json(userLibraries);
     } catch (error) {
       if (error instanceof ZodError) {
@@ -33,16 +43,26 @@ export const libraryController = {
   //Get all the libraries from the user
   async getLibrariesWithBooksByUserId(req, res) {
     try {
-      const { id } = req.params; // Get the user_id through JWT auth middleware (not done yet), req.user.id
+      const parsedData = paramsIdSchema.parse(req.params); // Get the user_id through JWT auth middleware (not done yet), req.user.id
       const userLibraries = await Library.findAll({
-        where: { user_id: id },
+        where: { user_id: parsedData.id },
         include: {
           model: Book,
         },
       });
-      console.log(JSON.stringify(userLibraries, null, 2));
+
+      if (!userLibraries[0]) {
+        return res
+          .status(404)
+          .json({ error: "Bibliothèque d'utilisateur introuvable" });
+      }
+
       res.status(200).json(userLibraries);
     } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ error: "Format d'url invalide" });
+      }
+      console.error(error);
       res.status(500).json('Erreur interne du serveur');
     }
   },
@@ -50,15 +70,26 @@ export const libraryController = {
   //Get a single library from its ID
   async getLibraryById(req, res) {
     try {
-      const { id } = req.params;
-      const userLibrary = await Library.findByPk(id, {
+      const parsedData = paramsIdSchema.parse(req.params);
+      const userLibrary = await Library.findByPk(parsedData.id, {
         include: {
           model: Book,
         },
       });
+
+      if (!userLibrary) {
+        return res
+          .status(404)
+          .json({ error: "Bibliothèque d'utilisateur introuvable" });
+      }
+
       console.log(JSON.stringify(userLibrary, null, 2));
       res.status(200).json(userLibrary);
     } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ error: "Format d'url invalide" });
+      }
+      console.error(error);
       res.status(500).json('Erreur interne du serveur');
     }
   },
@@ -71,19 +102,26 @@ export const libraryController = {
       const newLibrary = await Library.create(inputData);
       res.status(201).json(newLibrary);
     } catch (error) {
-      if (error instanceof ZodError) {
-        return res.status(400).json('Format des données non valide');
+      if (error instanceof z.ZodError) {
+        const zodErrors = error.errors.map((err) => ({
+          field: err.path[0],
+          message: err.message,
+        }));
+        return res.status(400).json({ errors: zodErrors });
       }
+
+      console.error(error);
       res.status(500).json('Erreur interne du serveur');
     }
   },
 
   async updateLibraryName(req, res) {
     try {
-      const { id } = req.params;
+      const parsedData = paramsIdSchema.parse(req.params);
       const inputData = req.body;
       await libraryUpdateSchema.parseAsync(inputData);
-      const userLibrary = await Library.findByPk(id);
+      const userLibrary = await Library.findByPk(parsedData.id);
+
       if (!userLibrary) {
         return res.status(404).json('Bibliothèque non trouvée');
       }

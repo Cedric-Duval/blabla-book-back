@@ -6,7 +6,7 @@ import { userDatasUpdate } from '../schemas/user.schema.js';
 export const userController = {
   async getUserDatas(req, res) {
     try {
-      const id = req.user?.id || 1;
+      const id = req.user?.id;
       const user = await User.findByPk(id, {
         attributes: { exclude: ['password'] },
       });
