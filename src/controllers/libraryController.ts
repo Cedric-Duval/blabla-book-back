@@ -90,7 +90,7 @@ export const libraryController = {
   async createNewLibrary(req, res) {
     try {
       const inputData = req.body;
-      inputData.user_id = req.user?.id || 1; // Get the user_id through JWT auth middleware (not done yet)
+      inputData.user_id = req.user?.id; // Get the user_id through JWT auth middleware (not done yet)
 
       await libraryCreateSchema.parseAsync(inputData);
 
