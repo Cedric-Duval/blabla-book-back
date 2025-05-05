@@ -5,6 +5,7 @@ import { bookController } from './controllers/bookController.js';
 import { libraryController } from './controllers/libraryController.js';
 import { userController } from './controllers/userController.js';
 import { authMiddleware } from './middlewares/authMiddleware.js';
+import { libraryCreateSchema } from './schemas/library.schema.js';
 
 export const router = Router();
 
@@ -21,14 +22,6 @@ router
   .delete(adminController.deleteBook);
 
 //LIBRARIES
-router.get(
-  '/user/:id/libraries',
-  libraryController.getLibrariesWithoutBooksByUserId,
-);
-router.get(
-  '/user/:id/libraries/books',
-  libraryController.getLibrariesWithBooksByUserId,
-);
 router
   .route('/library/:id')
   .get(libraryController.getLibraryById)
@@ -39,18 +32,30 @@ router
   .post(libraryController.addBookToLibrary)
   .patch(libraryController.editBookStatus)
   .delete(libraryController.deleteBook);
-router.post(
-  '/library',
-  authMiddleware.authorization,
-  libraryController.createNewLibrary,
-);
 
 //AUTHENTIFICATION
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 
+//AUTH OK (user_id from the token) --------------------------------------------------------------------
+//LIBRARIES
+router
+  .route('/library')
+  .get(
+    authMiddleware.authorization,
+    libraryController.getLibrariesWithBooksByUserId,
+  )
+  .post(authMiddleware.authorization, libraryController.createNewLibrary);
+
+router
+  .route('libraries/books')
+  .get(
+    authMiddleware.authorization,
+    libraryController.getLibrariesWithBooksByUserId,
+  );
+
 //USER
 router
   .route('/user')
   .get(authMiddleware.authorization, userController.getUserDatas)
-  .patch(userController.updateUserDatas); // => Issue with updating only one field, password is not hashed.
+  .patch(authMiddleware.authorization, userController.updateUserDatas);
