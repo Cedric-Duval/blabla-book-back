@@ -5,7 +5,6 @@ import { bookController } from './controllers/bookController.js';
 import { libraryController } from './controllers/libraryController.js';
 import { userController } from './controllers/userController.js';
 import { authMiddleware } from './middlewares/authMiddleware.js';
-import { libraryCreateSchema } from './schemas/library.schema.js';
 
 export const router = Router();
 
@@ -48,7 +47,7 @@ router
   .post(authMiddleware.authorization, libraryController.createNewLibrary);
 
 router
-  .route('libraries/books')
+  .route('/libraries/books')
   .get(
     authMiddleware.authorization,
     libraryController.getLibrariesWithBooksByUserId,

@@ -1,14 +1,23 @@
+import sanitizeHtml from 'sanitize-html';
 import { z } from 'zod';
 
 export const libraryCreateSchema = z.object({
-  name: z.string().max(100).min(1, { message: 'Le nom est requis' }),
+  name: z
+    .string()
+    .max(100, { message: 'Le nom est trop long' })
+    .min(1, { message: 'Le nom est requis' })
+    .transform((data) => sanitizeHtml(data)),
   user_id: z
     .number({ message: "L'identifiant de l'utilisateur est incorrect" })
     .int(),
 });
 
 export const libraryUpdateSchema = z.object({
-  name: z.string().max(100).min(1, { message: 'Le nom est requis' }),
+  name: z
+    .string()
+    .max(100, { message: 'Le nom est trop long' })
+    .min(1, { message: 'Le nom est requis' })
+    .transform((data) => sanitizeHtml(data)),
 });
 
 export const bookAndLibrarySchema = z.object({
