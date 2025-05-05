@@ -21,7 +21,7 @@ export const userController = {
         return res.status(400).json({ error: "Format d'url invalide" });
       }
       console.error(error);
-      res.status(500).json('Erreur interne du serveur');
+      res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   },
 
@@ -40,7 +40,7 @@ export const userController = {
       const user = await User.findByPk(parsedData.id);
 
       if (!user) {
-        return res.status(404).json('Utilisateur non trouvé');
+        return res.status(404).json({ error: 'Utilisateur non trouvé' });
       }
 
       const currentUser = await user.update(updatedDatas);
@@ -49,9 +49,9 @@ export const userController = {
       res.status(200).json(safeUser);
     } catch (error) {
       if (error instanceof ZodError) {
-        return res.status(400).json('Format des données non valide');
+        return res.status(400).json({ error: 'Format des données non valide' });
       }
-      res.status(500).json('Erreur interne du serveur');
+      res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   },
 };

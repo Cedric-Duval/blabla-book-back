@@ -6,7 +6,7 @@ import {
   libraryCreateSchema,
   libraryUpdateSchema,
 } from '../schemas/library.schema.js';
-import { paramsIdSchema } from '../schemas/paramsId.schema.js';
+import { paramsIdSchema } from '../schemas/params.schema.js';
 
 export const libraryController = {
   //Get all the libraries from the user
@@ -17,7 +17,6 @@ export const libraryController = {
         where: { user_id: parsedData.id },
       });
 
-      console.log(userLibraries);
       if (!userLibraries[0]) {
         return res
           .status(404)
@@ -30,7 +29,7 @@ export const libraryController = {
         return res.status(400).json({ error: "Format d'url invalide" });
       }
       console.error(error);
-      res.status(500).json('Erreur interne du serveur');
+      res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   },
 
@@ -57,7 +56,7 @@ export const libraryController = {
         return res.status(400).json({ error: "Format d'url invalide" });
       }
       console.error(error);
-      res.status(500).json('Erreur interne du serveur');
+      res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   },
 
@@ -84,7 +83,7 @@ export const libraryController = {
         return res.status(400).json({ error: "Format d'url invalide" });
       }
       console.error(error);
-      res.status(500).json('Erreur interne du serveur');
+      res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   },
 
@@ -92,8 +91,11 @@ export const libraryController = {
     try {
       const inputData = req.body;
       inputData.user_id = req.user?.id || 1; // Get the user_id through JWT auth middleware (not done yet)
+
       await libraryCreateSchema.parseAsync(inputData);
+
       const newLibrary = await Library.create(inputData);
+
       res.status(201).json(newLibrary);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -105,7 +107,7 @@ export const libraryController = {
       }
 
       console.error(error);
-      res.status(500).json('Erreur interne du serveur');
+      res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   },
 
@@ -126,9 +128,9 @@ export const libraryController = {
       res.status(200).json(userLibrary);
     } catch (error) {
       if (error instanceof ZodError) {
-        return res.status(400).json('Format des données non valide');
+        return res.status(400).json({ error: 'Format des données non valide' });
       }
-      res.status(500).json('Erreur interne du serveur');
+      res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   },
 
@@ -147,9 +149,9 @@ export const libraryController = {
       await LibraryBook.destroy({ where: { library_id: parsedData.id } });
       await userLibrary.destroy();
 
-      res.status(200).json('Bibliothèque supprimée avec succès');
+      res.status(200).json({ message: 'Bibliothèque supprimée avec succès' });
     } catch (error) {
-      res.status(500).json('Erreur interne du serveur');
+      res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   },
 
@@ -203,7 +205,7 @@ export const libraryController = {
         return res.status(400).json({ error: "Format d'url invalide" });
       }
       console.error(error);
-      res.status(500).json('Erreur interne du serveur');
+      res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   },
 
@@ -243,7 +245,7 @@ export const libraryController = {
         return res.status(400).json({ error: "Format d'url invalide" });
       }
       console.error(error);
-      res.status(500).json('Erreur interne du serveur');
+      res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   },
 
@@ -268,7 +270,7 @@ export const libraryController = {
         return res.status(400).json({ error: "Format d'url invalide" });
       }
       console.error(error);
-      res.status(500).json('Erreur interne du serveur');
+      res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   },
 };

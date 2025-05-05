@@ -2,8 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import { User } from '../models/association.model.js';
-import { createUser } from '../schemas/createUser.schema.js';
-import { loginUser } from '../schemas/loginUser.schema.js';
+import { createUser, loginUser } from '../schemas/auth.schema.js';
 
 export const authController = {
   async register(req, res) {
@@ -44,7 +43,7 @@ export const authController = {
       }
 
       console.error(error);
-      res.status(500).json('Erreur interne du serveur');
+      res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   },
 
@@ -104,7 +103,7 @@ export const authController = {
       }
 
       console.error(error);
-      res.status(500).json('Erreur interne du serveur');
+      res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   },
 };
