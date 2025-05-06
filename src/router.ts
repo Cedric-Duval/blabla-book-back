@@ -29,7 +29,7 @@ router
 router
   .route('/library/:libraryId/book/:bookId')
   .post(libraryController.addBookToLibrary)
-  .patch(libraryController.editBookStatus)
+  .patch(authMiddleware.authorization, libraryController.editBookStatus)
   .delete(libraryController.deleteBook);
 
 //AUTHENTIFICATION

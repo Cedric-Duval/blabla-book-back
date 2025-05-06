@@ -213,6 +213,7 @@ export const libraryController = {
 
   async editBookStatus(req, res) {
     try {
+      const parsedId = userIdSchema.parse({ id: req.user.id });
       const parsedData = bookAndLibrarySchema.parse(req.params);
 
       const currentLibraryBook = await LibraryBook.findOne({
@@ -232,10 +233,8 @@ export const libraryController = {
         read: !currentLibraryBook.read,
       });
 
-      const currentLibrary = await Library.findOne({
-        where: {
-          id: parsedData.libraryId,
-        },
+      const currentLibrary = await Library.findAll({
+        where: { user_id: parsedId.id },
         include: {
           model: Book,
         },
