@@ -11,9 +11,7 @@ export const userController = {
         attributes: { exclude: ['password'] },
         include: {
           model: Library,
-          include: {
-            model: Book
-          }
+          include: Book
         }
       });
 

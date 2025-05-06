@@ -11,7 +11,7 @@ VALUES
 INSERT INTO "library"
     ("name", "user_id")
 VALUES
-    ('Bibliothèque de Toto', 1),
+    ('Bibliothèque de Toto', 1)
 ;
 
 
