@@ -1,103 +1,53 @@
 import { z } from 'zod';
 import { ZodError } from 'zod';
+import { BadRequestError, NotFoundError } from '../errors/customErrors.js';
 import { Book, LibraryBook } from '../models/association.model.js';
 import { createBookSchema, editBookSchema } from '../schemas/book.schema.js';
 import { paramsIdSchema } from '../schemas/params.schema.js';
 
 export const adminController = {
   async createBook(req, res) {
-    try {
-      const parsedData = createBookSchema.parse(req.body);
-      console.log(parsedData);
+    const parsedData = createBookSchema.parse(req.body);
+    const existingBook = await Book.findOne({
+      where: { isbn: parsedData.isbn },
+    });
 
-      const existingBook = await Book.findOne({
-        where: { isbn: parsedData.isbn },
-      });
-
-      console.log(JSON.stringify(existingBook, null, 2));
-
-      if (existingBook) {
-        return res.status(400).json({
-          errors: [
-            {
-              field: 'isbn',
-              message: 'Cet ISBN est déjà repertorié dans la base de données',
-            },
-          ],
-        });
-      }
-
-      const newBook = await Book.create(parsedData);
-      res.status(201).json(newBook);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const zodErrors = error.errors.map((err) => ({
-          field: err.path[0],
-          message: err.message,
-        }));
-        return res.status(400).json({ errors: zodErrors });
-      }
-
-      console.error(error);
-      res.status(500).json({ error: 'Erreur interne du serveur' });
+    if (existingBook) {
+      throw new BadRequestError('ISBN déjà repertorié', 'isbn');
     }
+
+    const newBook = await Book.create(parsedData);
+    res.status(201).json(newBook);
   },
 
   async editBook(req, res) {
-    try {
-      const parsedParams = paramsIdSchema.parse(req.params);
-      const parsedData = editBookSchema.parse(req.body);
+    const parsedParams = paramsIdSchema.parse(req.params);
+    const parsedData = editBookSchema.parse(req.body);
+    const currentBook = await Book.findByPk(parsedParams.id);
 
-      const currentBook = await Book.findByPk(parsedParams.id);
-
-      if (!currentBook) {
-        return res.status(404).json({ error: 'Livre introuvable' });
-      }
-
-      await currentBook.update(parsedData);
-
-      res.status(200).json(currentBook);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const zodErrors = error.errors.map((err) => ({
-          field: err.path[0],
-          message: err.message,
-        }));
-        return res.status(400).json({ errors: zodErrors });
-      }
-
-      console.error(error);
-      res.status(500).json({ error: 'Erreur interne du serveur' });
+    if (!currentBook) {
+      throw new NotFoundError('Livre introuvable', 'URL');
     }
+
+    await currentBook.update(parsedData);
+    res.status(200).json(currentBook);
   },
 
   async deleteBook(req, res) {
-    try {
-      const parsedParams = paramsIdSchema.parse(req.params);
+    const parsedParams = paramsIdSchema.parse(req.params);
+    const currentBook = await Book.findByPk(parsedParams.id);
 
-      const currentBook = await Book.findByPk(parsedParams.id);
-
-      if (!currentBook) {
-        return res.status(404).json({ error: 'Livre introuvable' });
-      }
-
-      await LibraryBook.destroy({ where: { book_id: parsedParams.id } });
-      await Book.destroy({
-        where: {
-          id: parsedParams.id,
-        },
-      });
-
-      res.status(200).json({ message: 'Livre correctement supprimé' });
-    } catch (error) {
-      if (error instanceof ZodError) {
-        return res.status(400).json({
-          error: 'Format des données de selection du livre non valide',
-        });
-      }
-
-      console.error(error);
-      res.status(500).json({ error: 'Erreur interne du serveur' });
+    if (!currentBook) {
+      throw new NotFoundError('Livre introuvable', 'URL');
     }
+
+    await LibraryBook.destroy({ where: { book_id: parsedParams.id } });
+    await Book.destroy({
+      where: {
+        id: parsedParams.id,
+      },
+    });
+
+    res.status(200).json({ message: 'Livre correctement supprimé' });
   },
 };

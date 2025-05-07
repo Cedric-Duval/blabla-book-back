@@ -1,4 +1,5 @@
 import { ZodError } from 'zod';
+import { AppError } from '../errors/customErrors.js';
 
 export const errorHandler = (err, req, res, next) => {
   if (err instanceof ZodError) {
@@ -9,6 +10,11 @@ export const errorHandler = (err, req, res, next) => {
     return res.status(400).json({ errors: zodErrors });
   }
 
-  console.error(err);
+  if (err instanceof AppError) {
+    const customErrors = [{ field: err.field, error: err.message }];
+    return res.status(err.statusCode).json({ errors: customErrors });
+  }
+
+  console.error('Erreur inconnue :', err);
   return res.status(500).json({ error: 'Erreur interne du serveur' });
 };

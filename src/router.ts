@@ -5,20 +5,21 @@ import { bookController } from './controllers/bookController.js';
 import { libraryController } from './controllers/libraryController.js';
 import { userController } from './controllers/userController.js';
 import { authMiddleware } from './middlewares/authMiddleware.js';
+import { wrapController } from './middlewares/wrapController.js';
 
 export const router = Router();
 
 //BOOKS
-router.get('/books', bookController.getAllBooks);
-router.get('/book/:id', bookController.getOneBookById);
-router.get('/random-books', bookController.getFiveRandomBooks);
+router.get('/books', wrapController(bookController.getAllBooks));
+router.get('/book/:id', wrapController(bookController.getOneBookById));
+router.get('/random-books', wrapController(bookController.getFiveRandomBooks));
 
 //ADMIN
-router.post('/admin/book', adminController.createBook);
+router.post('/admin/book', wrapController(adminController.createBook));
 router
   .route('/admin/book/:id')
-  .patch(adminController.editBook)
-  .delete(adminController.deleteBook);
+  .patch(wrapController(adminController.editBook))
+  .delete(wrapController(adminController.deleteBook));
 
 //LIBRARIES
 router
@@ -33,8 +34,8 @@ router
   .delete(libraryController.deleteBook);
 
 //AUTHENTIFICATION
-router.post('/register', authController.register);
-router.post('/login', authController.login);
+router.post('/register', wrapController(authController.register));
+router.post('/login', wrapController(authController.login));
 
 //AUTH OK (user_id from the token) --------------------------------------------------------------------
 //LIBRARIES
