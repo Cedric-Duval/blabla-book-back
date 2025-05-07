@@ -57,4 +57,5 @@ router
 router
   .route('/user')
   .get(authMiddleware.authorization, userController.getUserDatas)
-  .patch(authMiddleware.authorization, userController.updateUserDatas);
+  .patch(authMiddleware.authorization, userController.updateUserDatas); // => Issue with updating only one field, password is not hashed.
+
