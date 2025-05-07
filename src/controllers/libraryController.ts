@@ -3,7 +3,6 @@ import {
   checkFoundLibrary,
   checkRelationLibraryBook,
 } from '../errors/checkErros.js';
-import { BadRequestError, NotFoundError } from '../errors/customErrors.js';
 import { Book, Library, LibraryBook } from '../models/association.model.js';
 import {
   addBookToLibrarySchema,

@@ -17,3 +17,9 @@ export function checkRelationLibraryBook(data) {
     throw new NotFoundError('Relation non trouvée', 'URL');
   }
 }
+
+export function checkFoundBook(data) {
+  if (!data) {
+    throw new NotFoundError('Livre introuvable', 'URL');
+  }
+}
