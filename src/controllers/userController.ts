@@ -2,6 +2,8 @@ import bcrypt from 'bcrypt';
 import { ZodError } from 'zod';
 import { NotFoundError } from '../errors/customErrors.js';
 import { User } from '../models/association.model.js';
+import { Library } from '../models/association.model.js';
+import { Book } from '../models/association.model.js';
 
 import { userDatasUpdate, userIdSchema } from '../schemas/user.schema.js';
 
