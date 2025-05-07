@@ -34,6 +34,8 @@ export const userController = {
       const parsedData = userIdSchema.parse({ id: req.user?.id || 1 }); // Get the user_id through JWT auth middleware (not done yet)
       const updatedDatas = req.body;
 
+      console.log(updatedDatas);
+
       await userDatasUpdate.parseAsync(updatedDatas);
 
       if (updatedDatas.password) {
@@ -47,7 +49,26 @@ export const userController = {
         return res.status(404).json({ error: 'Utilisateur non trouvé' });
       }
 
-      const currentUser = await user.update(updatedDatas);
+      const isMatch = await bcrypt.compare(updatedDatas.currentPassword, user.dataValues.password);
+
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Mot de passe non valide'});
+      }
+
+      if (updatedDatas.newPassword !== updatedDatas.confirmPassword) {
+        return res.status(400).json({ message: 'Les mots de passe ne sont pas identiques'});
+      }
+
+      const newHashPassword = await bcrypt.hash(updatedDatas.newPassword, 10);
+
+      const newUpdatedDatas = {
+        name: updatedDatas.name,
+        firstname: updatedDatas.firstname,
+        email: updatedDatas.email,
+        password: newHashPassword
+      }
+
+      const currentUser = await user.update(newUpdatedDatas);
       const { password, ...safeUser } = currentUser.get({ plain: true });
 
       res.status(200).json(safeUser);
