@@ -7,12 +7,14 @@ import {
   libraryUpdateSchema,
 } from '../schemas/library.schema.js';
 import { paramsIdSchema } from '../schemas/params.schema.js';
+import { userIdSchema } from '../schemas/user.schema.js';
 
 export const libraryController = {
   //Get all the libraries from the user
   async getLibrariesWithoutBooksByUserId(req, res) {
     try {
-      const parsedData = paramsIdSchema.parse(req.params); // Get the user_id through JWT auth middleware (not done yet), req.user.id
+      const parsedData = userIdSchema.parse({ id: req.user.id });
+
       const userLibraries = await Library.findAll({
         where: { user_id: parsedData.id },
       });
@@ -36,7 +38,7 @@ export const libraryController = {
   //Get all the libraries from the user
   async getLibrariesWithBooksByUserId(req, res) {
     try {
-      const parsedData = paramsIdSchema.parse(req.params); // Get the user_id through JWT auth middleware (not done yet), req.user.id
+      const parsedData = userIdSchema.parse({ id: req.user.id });
       const userLibraries = await Library.findAll({
         where: { user_id: parsedData.id },
         include: {
@@ -90,7 +92,7 @@ export const libraryController = {
   async createNewLibrary(req, res) {
     try {
       const inputData = req.body;
-      inputData.user_id = req.user?.id; // Get the user_id through JWT auth middleware (not done yet)
+      inputData.user_id = req.user?.id;
 
       await libraryCreateSchema.parseAsync(inputData);
 
@@ -211,6 +213,7 @@ export const libraryController = {
 
   async editBookStatus(req, res) {
     try {
+      const parsedId = userIdSchema.parse({ id: req.user.id });
       const parsedData = bookAndLibrarySchema.parse(req.params);
 
       const currentLibraryBook = await LibraryBook.findOne({
@@ -230,10 +233,8 @@ export const libraryController = {
         read: !currentLibraryBook.read,
       });
 
-      const currentLibrary = await Library.findOne({
-        where: {
-          id: parsedData.libraryId,
-        },
+      const currentLibrary = await Library.findAll({
+        where: { user_id: parsedId.id },
         include: {
           model: Book,
         },
