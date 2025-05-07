@@ -18,6 +18,12 @@ export function checkFoundSecret(data) {
   }
 }
 
+export function checkFoundUser(data) {
+  if (!data) {
+    throw new NotFoundError('Utilisateur non trouvé', 'tokenId');
+  }
+}
+
 export function checkExistingBook(data) {
   if (data) {
     throw new BadRequestError('ISBN déjà repertorié', 'isbn');
@@ -44,12 +50,21 @@ export function checkExistingEmail(data) {
 
 export function checkExistingPassword(data) {
   if (!data) {
-    throw new BadRequestError('Mot de passe invalide', 'password');
+    throw new BadRequestError('Mot de passe non valide', 'password');
   }
 }
 
 export function checkRelationLibraryBook(data) {
   if (!data) {
     throw new NotFoundError('Relation non trouvée', 'URL');
+  }
+}
+
+export function checkConfirmPassword(newPwd, confirmPwd) {
+  if (newPwd !== confirmPwd) {
+    throw new BadRequestError(
+      'Les mots de passe ne sont pas identiques',
+      'password',
+    );
   }
 }
