@@ -11,7 +11,10 @@
 	},
 	"formatter": {
 		"enabled": true,
-		"indentStyle": "space"
+		"indentStyle": "space",
+		"ignore": [
+			"src/routers"
+		]
 	},
 	"organizeImports": {
 		"enabled": true
