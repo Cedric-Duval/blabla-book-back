@@ -1,6 +1,5 @@
 import { Sequelize } from 'sequelize';
-import { ZodError } from 'zod';
-import { NotFoundError } from '../errors/customErrors.js';
+import { checkFoundBook } from '../errors/checkErros.js';
 import { Book } from '../models/association.model.js';
 import { paramsIdSchema } from '../schemas/params.schema.js';
 
@@ -25,9 +24,7 @@ export const bookController = {
     const parsedData = paramsIdSchema.parse(req.params);
     const oneBook = await Book.findByPk(parsedData.id);
 
-    if (!oneBook) {
-      throw new NotFoundError('Livre introuvable', 'URL');
-    }
+    checkFoundBook(oneBook);
 
     res.status(200).json(oneBook);
   },

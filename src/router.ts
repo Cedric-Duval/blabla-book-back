@@ -7,7 +7,6 @@ import { userRouter } from './routers/user.router.js';
 
 export const router = Router();
 
-
 router.use(booksRouter);
 router.use(adminRouter);
 router.use(librariesRouter);

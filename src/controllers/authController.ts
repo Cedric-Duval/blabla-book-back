@@ -1,4 +1,8 @@
-import { BadRequestError, NotFoundError } from '../errors/customErrors.js';
+import {
+  checkExistingEmail,
+  checkExistingUser,
+  checkFoundSecret,
+} from '../errors/checkErros.js';
 import { User } from '../models/association.model.js';
 import { createUser, loginUser } from '../schemas/auth.schema.js';
 import {
@@ -15,9 +19,7 @@ export const authController = {
       where: { email: parsedData.email },
     });
 
-    if (existingUser) {
-      throw new BadRequestError('Adresse mail déjà utilisée', 'email');
-    }
+    checkExistingUser(existingUser);
 
     const hashedPassword = await hashPassword(parsedData.password);
 
@@ -38,20 +40,11 @@ export const authController = {
       where: { email: parsedData.email },
     });
 
-    if (!currentUser) {
-      throw new BadRequestError('Adresse mail invalide', 'email');
-    }
+    checkExistingEmail(currentUser);
+    await checkPassword(parsedData.password, currentUser?.password);
+    checkFoundSecret(process.env.JWT_SECRET);
 
-    if (!(await checkPassword(parsedData.password, currentUser.password))) {
-      throw new BadRequestError('Mot de passe invalide', 'password');
-    }
-
-    if (!process.env.JWT_SECRET) {
-      throw new NotFoundError("JWT_SECRET n'est pas défini", 'environment');
-    }
-
-    const token = createToken(currentUser.id, currentUser.email);
-
+    const token = createToken(currentUser?.id, currentUser?.email);
     res.status(200).json({ token, currentUser });
   },
 };
