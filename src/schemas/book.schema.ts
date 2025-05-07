@@ -38,10 +38,9 @@ const commonBookSchema = {
     .number()
     .int()
     .min(1, { message: 'La date est requise' })
-    .max(
-      new Date().getFullYear(),
-      "La date ne peut être supérieur à l'année en cours",
-    ),
+    .max(new Date().getFullYear(), {
+      message: "La date ne peut être supérieur à l'année en cours",
+    }),
 };
 
 export const createBookSchema = z.object(commonBookSchema);
