@@ -186,6 +186,9 @@ export const libraryController = {
 
     const userLibraries = await Library.findAll({
       where: { user_id: parsedId.id },
+      include: {
+        model: Book,
+      },
     });
 
     res.status(200).json(userLibraries);
