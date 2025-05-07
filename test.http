@@ -74,14 +74,14 @@ Content-Type: application/json
 }
 
 ### Get one library by id (with books)
-GET http://localhost:3000/library/2
+GET http://localhost:3000/library/4
 
 ###Edit a library by id
 PATCH http://localhost:3000/library/3
 Content-Type: application/json
 
 {
-    "name": "Test modification 2"
+    "name": "Test modification 3"
 }
 
 ### Delete a library by id

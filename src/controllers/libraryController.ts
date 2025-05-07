@@ -1,5 +1,8 @@
-import { ZodError } from 'zod';
-import { z } from 'zod';
+import {
+  checkExistingBookinLibrary,
+  checkFoundLibrary,
+  checkRelationLibraryBook,
+} from '../errors/checkErros.js';
 import { BadRequestError, NotFoundError } from '../errors/customErrors.js';
 import { Book, Library, LibraryBook } from '../models/association.model.js';
 import {
@@ -19,9 +22,7 @@ export const libraryController = {
       where: { user_id: parsedData.id },
     });
 
-    if (!userLibraries[0]) {
-      throw new NotFoundError("Bibliothèque d'utilisateur introuvable", 'URL');
-    }
+    checkFoundLibrary(userLibraries[0]);
 
     res.status(200).json(userLibraries);
   },
@@ -36,9 +37,7 @@ export const libraryController = {
       },
     });
 
-    if (!userLibraries[0]) {
-      throw new NotFoundError("Bibliothèque d'utilisateur introuvable", 'URL');
-    }
+    checkFoundLibrary(userLibraries[0]);
 
     res.status(200).json(userLibraries);
   },
@@ -52,9 +51,7 @@ export const libraryController = {
       },
     });
 
-    if (!userLibrary) {
-      throw new NotFoundError("Bibliothèque d'utilisateur introuvable", 'URL');
-    }
+    checkFoundLibrary(userLibrary);
 
     res.status(200).json(userLibrary);
   },
@@ -74,11 +71,9 @@ export const libraryController = {
     await libraryUpdateSchema.parseAsync(inputData);
     const userLibrary = await Library.findByPk(parsedData.id);
 
-    if (!userLibrary) {
-      throw new NotFoundError("Bibliothèque d'utilisateur introuvable", 'URL');
-    }
+    checkFoundLibrary(userLibrary);
 
-    await userLibrary.update(inputData);
+    await userLibrary?.update(inputData);
     res.status(200).json(userLibrary);
   },
 
@@ -86,14 +81,12 @@ export const libraryController = {
     const parsedData = paramsIdSchema.parse(req.params);
     const userLibrary = await Library.findByPk(parsedData.id);
 
-    if (!userLibrary) {
-      throw new NotFoundError("Bibliothèque d'utilisateur introuvable", 'URL');
-    }
+    checkFoundLibrary(userLibrary);
 
-    //Check if the user is the owner of the library ?
+    // TODO Check if the user is the owner of the library ?
 
     await LibraryBook.destroy({ where: { library_id: parsedData.id } });
-    await userLibrary.destroy();
+    await userLibrary?.destroy();
 
     res.status(200).json({ message: 'Bibliothèque supprimée avec succès' });
   },
@@ -111,17 +104,13 @@ export const libraryController = {
       },
     });
 
-    if (!currentLibrary) {
-      throw new NotFoundError("Bibliothèque d'utilisateur introuvable", 'URL');
-    }
+    checkFoundLibrary(currentLibrary);
 
     const existingBook = currentLibrary.Books.find(
       (book) => book.id === parsedId.bookId,
     );
 
-    if (existingBook) {
-      throw new BadRequestError('Livre présent dans la bibliothèque', 'isbn');
-    }
+    checkExistingBookinLibrary(existingBook);
 
     await LibraryBook.create({
       library_id: parsedId.libraryId,
@@ -152,11 +141,9 @@ export const libraryController = {
       },
     });
 
-    if (!currentLibraryBook) {
-      throw new NotFoundError('Relation non trouvée', 'URL');
-    }
+    checkRelationLibraryBook(currentLibraryBook);
 
-    await currentLibraryBook.update({
+    await currentLibraryBook?.update({
       read: !currentLibraryBook.read,
     });
 
@@ -174,8 +161,8 @@ export const libraryController = {
     const parsedData = bookAndLibrarySchema.parse(req.params);
     const parsedId = userIdSchema.parse({ id: req.user.id });
 
-    //Check if the user is the owner of the library ?
-    //And check if this is an existing association ?
+    // TODO Check if the user is the owner of the library ?
+    //TODO And check if this is an existing association ?
 
     await LibraryBook.destroy({
       where: {

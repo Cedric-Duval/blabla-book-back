@@ -1,5 +1,4 @@
 import { Sequelize } from 'sequelize';
-import { ZodError } from 'zod';
 import { NotFoundError } from '../errors/customErrors.js';
 import { Book } from '../models/association.model.js';
 import { paramsIdSchema } from '../schemas/params.schema.js';
