@@ -18,6 +18,12 @@ export function checkFoundSecret(data) {
   }
 }
 
+export function checkExistingBook(data) {
+  if (data) {
+    throw new BadRequestError('ISBN déjà repertorié', 'isbn');
+  }
+}
+
 export function checkExistingBookinLibrary(data) {
   if (data) {
     throw new BadRequestError('Livre présent dans la bibliothèque', 'isbn');

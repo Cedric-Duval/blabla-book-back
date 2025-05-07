@@ -1,3 +1,4 @@
+import { checkExistingBook, checkFoundBook } from '../errors/checkErros.js';
 import { BadRequestError, NotFoundError } from '../errors/customErrors.js';
 import { Book, LibraryBook } from '../models/association.model.js';
 import { createBookSchema, editBookSchema } from '../schemas/book.schema.js';
@@ -10,9 +11,7 @@ export const adminController = {
       where: { isbn: parsedData.isbn },
     });
 
-    if (existingBook) {
-      throw new BadRequestError('ISBN déjà repertorié', 'isbn');
-    }
+    checkExistingBook(existingBook);
 
     const newBook = await Book.create(parsedData);
     res.status(201).json(newBook);
@@ -23,11 +22,9 @@ export const adminController = {
     const parsedData = editBookSchema.parse(req.body);
     const currentBook = await Book.findByPk(parsedParams.id);
 
-    if (!currentBook) {
-      throw new NotFoundError('Livre introuvable', 'URL');
-    }
+    checkFoundBook(currentBook);
 
-    await currentBook.update(parsedData);
+    await currentBook?.update(parsedData);
     res.status(200).json(currentBook);
   },
 
@@ -35,9 +32,7 @@ export const adminController = {
     const parsedParams = paramsIdSchema.parse(req.params);
     const currentBook = await Book.findByPk(parsedParams.id);
 
-    if (!currentBook) {
-      throw new NotFoundError('Livre introuvable', 'URL');
-    }
+    checkFoundBook(currentBook);
 
     await LibraryBook.destroy({ where: { book_id: parsedParams.id } });
     await Book.destroy({
