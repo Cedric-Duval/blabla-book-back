@@ -1,9 +1,10 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { checkExistingPassword } from '../errors/checkErros.js';
 
 export async function checkPassword(inputData: string, password: string) {
   const validatedPassword = await bcrypt.compare(inputData, password);
-  return validatedPassword;
+  checkExistingPassword(validatedPassword);
 }
 
 export function createToken(currentId: number, currentEmail: string) {
