@@ -172,6 +172,7 @@ export const libraryController = {
 
   async deleteBook(req, res) {
     const parsedData = bookAndLibrarySchema.parse(req.params);
+    const parsedId = userIdSchema.parse({ id: req.user.id });
 
     //Check if the user is the owner of the library ?
     //And check if this is an existing association ?
@@ -183,8 +184,10 @@ export const libraryController = {
       },
     });
 
-    res
-      .status(200)
-      .json({ message: 'Livre correctement supprimé de la bibliothèque' });
+    const userLibraries = await Library.findAll({
+      where: { user_id: parsedId.id },
+    });
+
+    res.status(200).json(userLibraries);
   },
 };

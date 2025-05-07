@@ -34,7 +34,10 @@ router
     authMiddleware.authorization,
     wrapController(libraryController.editBookStatus),
   )
-  .delete(wrapController(libraryController.deleteBook));
+  .delete(
+    authMiddleware.authorization,
+    wrapController(libraryController.deleteBook),
+  );
 
 //AUTHENTIFICATION
 router.post('/register', wrapController(authController.register));
