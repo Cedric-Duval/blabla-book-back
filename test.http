@@ -29,7 +29,7 @@ Content-Type: application/json
 
 
 ###Edit a book in database 
-PATCH http://localhost:3000/admin/book/29
+PATCH http://localhost:3000/admin/book/295
 Content-Type: application/json
 
 {
@@ -40,7 +40,7 @@ Content-Type: application/json
 
 
 ###Delete a book in database 
-DELETE http://localhost:3000/admin/book/-33
+DELETE http://localhost:3000/admin/book/33
 
 
 
