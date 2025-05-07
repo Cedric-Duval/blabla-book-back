@@ -13,7 +13,7 @@ export function checkFoundBook(data) {
 }
 
 export function checkFoundSecret(data) {
-  if (data) {
+  if (!data) {
     throw new NotFoundError("JWT_SECRET n'est pas défini", 'environment');
   }
 }
