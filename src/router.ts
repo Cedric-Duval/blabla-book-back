@@ -15,11 +15,11 @@ router.get('/book/:id', wrapController(bookController.getOneBookById));
 router.get('/random-books', wrapController(bookController.getFiveRandomBooks));
 
 //ADMIN
-router.post('/admin/book', adminController.createBook);
+router.post('/admin/book', wrapController(adminController.createBook));
 router
   .route('/admin/book/:id')
-  .patch(adminController.editBook)
-  .delete(adminController.deleteBook);
+  .patch(wrapController(adminController.editBook))
+  .delete(wrapController(adminController.deleteBook));
 
 //LIBRARIES
 router
