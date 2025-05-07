@@ -31,8 +31,6 @@ export const userController = {
       console.error(error);
       res.status(500).json({ error: 'Erreur interne du serveur' });
     }
-
-    res.status(200).json(user);
   },
 
   async updateUserDatas(req, res) {
