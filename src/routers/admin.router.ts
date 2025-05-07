@@ -5,7 +5,6 @@ import { wrapController } from '../middlewares/wrapController.js';
 export const adminRouter = Router();
 
 adminRouter.post('/admin/book', wrapController(adminController.createBook));
-adminRouter
-  .route('/admin/book/:id')
+adminRouter.route('/admin/book/:id')
   .patch(wrapController(adminController.editBook))
   .delete(wrapController(adminController.deleteBook));

@@ -5,13 +5,6 @@ import { wrapController } from '../middlewares/wrapController.js';
 
 export const userRouter = Router();
 
-userRouter
-  .route('/user')
-  .get(
-    authMiddleware.authorization,
-    wrapController(userController.getUserDatas),
-  )
-  .patch(
-    authMiddleware.authorization,
-    wrapController(userController.updateUserDatas),
-  );
+userRouter.route('/user')
+  .get(authMiddleware.authorization, wrapController(userController.getUserDatas))
+  .patch(authMiddleware.authorization, wrapController(userController.updateUserDatas));
