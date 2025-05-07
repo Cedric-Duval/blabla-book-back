@@ -1,7 +1,9 @@
 import { ZodError } from 'zod';
 import { z } from 'zod';
+import { BadRequestError, NotFoundError } from '../errors/customErrors.js';
 import { Book, Library, LibraryBook } from '../models/association.model.js';
 import {
+  addBookToLibrarySchema,
   bookAndLibrarySchema,
   libraryCreateSchema,
   libraryUpdateSchema,
@@ -12,266 +14,177 @@ import { userIdSchema } from '../schemas/user.schema.js';
 export const libraryController = {
   //Get all the libraries from the user
   async getLibrariesWithoutBooksByUserId(req, res) {
-    try {
-      const parsedData = userIdSchema.parse({ id: req.user.id });
+    const parsedData = userIdSchema.parse({ id: req.user.id });
+    const userLibraries = await Library.findAll({
+      where: { user_id: parsedData.id },
+    });
 
-      const userLibraries = await Library.findAll({
-        where: { user_id: parsedData.id },
-      });
-
-      if (!userLibraries[0]) {
-        return res
-          .status(404)
-          .json({ error: "Bibliothèque d'utilisateur introuvable" });
-      }
-
-      res.status(200).json(userLibraries);
-    } catch (error) {
-      if (error instanceof ZodError) {
-        return res.status(400).json({ error: "Format d'url invalide" });
-      }
-      console.error(error);
-      res.status(500).json({ error: 'Erreur interne du serveur' });
+    if (!userLibraries[0]) {
+      throw new NotFoundError("Bibliothèque d'utilisateur introuvable", 'URL');
     }
+
+    res.status(200).json(userLibraries);
   },
 
   //Get all the libraries from the user
   async getLibrariesWithBooksByUserId(req, res) {
-    try {
-      const parsedData = userIdSchema.parse({ id: req.user.id });
-      const userLibraries = await Library.findAll({
-        where: { user_id: parsedData.id },
-        include: {
-          model: Book,
-        },
-      });
+    const parsedData = userIdSchema.parse({ id: req.user.id });
+    const userLibraries = await Library.findAll({
+      where: { user_id: parsedData.id },
+      include: {
+        model: Book,
+      },
+    });
 
-      if (!userLibraries[0]) {
-        return res
-          .status(404)
-          .json({ error: "Bibliothèque d'utilisateur introuvable" });
-      }
-
-      res.status(200).json(userLibraries);
-    } catch (error) {
-      if (error instanceof ZodError) {
-        return res.status(400).json({ error: "Format d'url invalide" });
-      }
-      console.error(error);
-      res.status(500).json({ error: 'Erreur interne du serveur' });
+    if (!userLibraries[0]) {
+      throw new NotFoundError("Bibliothèque d'utilisateur introuvable", 'URL');
     }
+
+    res.status(200).json(userLibraries);
   },
 
   //Get a single library from its ID
   async getLibraryById(req, res) {
-    try {
-      const parsedData = paramsIdSchema.parse(req.params);
-      const userLibrary = await Library.findByPk(parsedData.id, {
-        include: {
-          model: Book,
-        },
-      });
+    const parsedData = paramsIdSchema.parse(req.params);
+    const userLibrary = await Library.findByPk(parsedData.id, {
+      include: {
+        model: Book,
+      },
+    });
 
-      if (!userLibrary) {
-        return res
-          .status(404)
-          .json({ error: "Bibliothèque d'utilisateur introuvable" });
-      }
-
-      console.log(JSON.stringify(userLibrary, null, 2));
-      res.status(200).json(userLibrary);
-    } catch (error) {
-      if (error instanceof ZodError) {
-        return res.status(400).json({ error: "Format d'url invalide" });
-      }
-      console.error(error);
-      res.status(500).json({ error: 'Erreur interne du serveur' });
+    if (!userLibrary) {
+      throw new NotFoundError("Bibliothèque d'utilisateur introuvable", 'URL');
     }
+
+    res.status(200).json(userLibrary);
   },
 
   async createNewLibrary(req, res) {
-    try {
-      const inputData = req.body;
-      inputData.user_id = req.user?.id;
+    const inputData = req.body;
+    inputData.user_id = req.user?.id;
 
-      await libraryCreateSchema.parseAsync(inputData);
-
-      const newLibrary = await Library.create(inputData);
-
-      res.status(201).json(newLibrary);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const zodErrors = error.errors.map((err) => ({
-          field: err.path[0],
-          message: err.message,
-        }));
-        return res.status(400).json({ errors: zodErrors });
-      }
-
-      console.error(error);
-      res.status(500).json({ error: 'Erreur interne du serveur' });
-    }
+    await libraryCreateSchema.parseAsync(inputData);
+    const newLibrary = await Library.create(inputData);
+    res.status(201).json(newLibrary);
   },
 
   async updateLibraryName(req, res) {
-    try {
-      const parsedData = paramsIdSchema.parse(req.params);
-      const inputData = req.body;
-      await libraryUpdateSchema.parseAsync(inputData);
-      const userLibrary = await Library.findByPk(parsedData.id);
+    const parsedData = paramsIdSchema.parse(req.params);
+    const inputData = req.body;
+    await libraryUpdateSchema.parseAsync(inputData);
+    const userLibrary = await Library.findByPk(parsedData.id);
 
-      if (!userLibrary) {
-        return res
-          .status(404)
-          .json({ error: "Bibliothèque d'utilisateur introuvable" });
-      }
-
-      await userLibrary.update(inputData);
-      res.status(200).json(userLibrary);
-    } catch (error) {
-      if (error instanceof ZodError) {
-        return res.status(400).json({ error: 'Format des données non valide' });
-      }
-      res.status(500).json({ error: 'Erreur interne du serveur' });
+    if (!userLibrary) {
+      throw new NotFoundError("Bibliothèque d'utilisateur introuvable", 'URL');
     }
+
+    await userLibrary.update(inputData);
+    res.status(200).json(userLibrary);
   },
 
   async deleteLibrary(req, res) {
-    try {
-      const parsedData = paramsIdSchema.parse(req.params);
-      const userLibrary = await Library.findByPk(parsedData.id);
+    const parsedData = paramsIdSchema.parse(req.params);
+    const userLibrary = await Library.findByPk(parsedData.id);
 
-      if (!userLibrary) {
-        return res
-          .status(404)
-          .json({ error: "Bibliothèque d'utilisateur introuvable" });
-      }
-      //Check if the user is the owner of the library ?
-
-      await LibraryBook.destroy({ where: { library_id: parsedData.id } });
-      await userLibrary.destroy();
-
-      res.status(200).json({ message: 'Bibliothèque supprimée avec succès' });
-    } catch (error) {
-      res.status(500).json({ error: 'Erreur interne du serveur' });
+    if (!userLibrary) {
+      throw new NotFoundError("Bibliothèque d'utilisateur introuvable", 'URL');
     }
+
+    //Check if the user is the owner of the library ?
+
+    await LibraryBook.destroy({ where: { library_id: parsedData.id } });
+    await userLibrary.destroy();
+
+    res.status(200).json({ message: 'Bibliothèque supprimée avec succès' });
   },
 
   async addBookToLibrary(req, res) {
-    try {
-      const parsedData = bookAndLibrarySchema.parse(req.params);
+    const parsedId = bookAndLibrarySchema.parse(req.params);
+    const parsedData = addBookToLibrarySchema.parse(req.body);
 
-      const currentLibrary = await Library.findOne({
-        where: {
-          id: parsedData.libraryId,
-        },
-        include: {
-          model: Book,
-        },
-      });
+    const currentLibrary = await Library.findOne({
+      where: {
+        id: parsedId.libraryId,
+      },
+      include: {
+        model: Book,
+      },
+    });
 
-      if (!currentLibrary) {
-        return res
-          .status(404)
-          .json({ error: "Bibliothèque d'utilisateur introuvable" });
-      }
-
-      const existingBook = currentLibrary.Books.find(
-        (book) => book.id === parsedData.bookId,
-      );
-
-      if (existingBook) {
-        return res
-          .status(404)
-          .json({ error: 'Le livre est déjà présent dans la bibliothèque' });
-      }
-
-      await LibraryBook.create({
-        library_id: parsedData.libraryId,
-        book_id: parsedData.bookId,
-        read: false,
-      });
-
-      const newLibrary = await Library.findOne({
-        where: {
-          id: parsedData.libraryId,
-        },
-        include: {
-          model: Book,
-        },
-      });
-
-      res.status(200).json(newLibrary);
-    } catch (error) {
-      if (error instanceof ZodError) {
-        return res.status(400).json({ error: "Format d'url invalide" });
-      }
-      console.error(error);
-      res.status(500).json({ error: 'Erreur interne du serveur' });
+    if (!currentLibrary) {
+      throw new NotFoundError("Bibliothèque d'utilisateur introuvable", 'URL');
     }
+
+    const existingBook = currentLibrary.Books.find(
+      (book) => book.id === parsedId.bookId,
+    );
+
+    if (existingBook) {
+      throw new BadRequestError('Livre présent dans la bibliothèque', 'isbn');
+    }
+
+    await LibraryBook.create({
+      library_id: parsedId.libraryId,
+      book_id: parsedId.bookId,
+      read: parsedData.read,
+    });
+
+    const newLibrary = await Library.findOne({
+      where: {
+        id: parsedId.libraryId,
+      },
+      include: {
+        model: Book,
+      },
+    });
+
+    res.status(200).json(newLibrary);
   },
 
   async editBookStatus(req, res) {
-    try {
-      const parsedId = userIdSchema.parse({ id: req.user.id });
-      const parsedData = bookAndLibrarySchema.parse(req.params);
+    const parsedId = userIdSchema.parse({ id: req.user.id });
+    const parsedData = bookAndLibrarySchema.parse(req.params);
 
-      const currentLibraryBook = await LibraryBook.findOne({
-        where: {
-          library_id: parsedData.libraryId,
-          book_id: parsedData.bookId,
-        },
-      });
+    const currentLibraryBook = await LibraryBook.findOne({
+      where: {
+        library_id: parsedData.libraryId,
+        book_id: parsedData.bookId,
+      },
+    });
 
-      if (!currentLibraryBook) {
-        return res
-          .status(404)
-          .json({ error: 'Relation bibliothèque/livre non trouvée' });
-      }
-
-      await currentLibraryBook.update({
-        read: !currentLibraryBook.read,
-      });
-
-      const currentLibrary = await Library.findAll({
-        where: { user_id: parsedId.id },
-        include: {
-          model: Book,
-        },
-      });
-
-      res.status(200).json(currentLibrary);
-    } catch (error) {
-      if (error instanceof ZodError) {
-        return res.status(400).json({ error: "Format d'url invalide" });
-      }
-      console.error(error);
-      res.status(500).json({ error: 'Erreur interne du serveur' });
+    if (!currentLibraryBook) {
+      throw new NotFoundError('Relation non trouvée', 'URL');
     }
+
+    await currentLibraryBook.update({
+      read: !currentLibraryBook.read,
+    });
+
+    const currentLibrary = await Library.findAll({
+      where: { user_id: parsedId.id },
+      include: {
+        model: Book,
+      },
+    });
+
+    res.status(200).json(currentLibrary);
   },
 
   async deleteBook(req, res) {
-    try {
-      const parsedData = bookAndLibrarySchema.parse(req.params);
+    const parsedData = bookAndLibrarySchema.parse(req.params);
 
-      //Check if the user is the owner of the library ?
-      //And check if this is an existing association ?
+    //Check if the user is the owner of the library ?
+    //And check if this is an existing association ?
 
-      await LibraryBook.destroy({
-        where: {
-          library_id: parsedData.libraryId,
-          book_id: parsedData.bookId,
-        },
-      });
-      res
-        .status(200)
-        .json({ message: 'Livre correctement supprimé de la bibliothèque' });
-    } catch (error) {
-      if (error instanceof ZodError) {
-        return res.status(400).json({ error: "Format d'url invalide" });
-      }
-      console.error(error);
-      res.status(500).json({ error: 'Erreur interne du serveur' });
-    }
+    await LibraryBook.destroy({
+      where: {
+        library_id: parsedData.libraryId,
+        book_id: parsedData.bookId,
+      },
+    });
+
+    res
+      .status(200)
+      .json({ message: 'Livre correctement supprimé de la bibliothèque' });
   },
 };

@@ -24,14 +24,17 @@ router
 //LIBRARIES
 router
   .route('/library/:id')
-  .get(libraryController.getLibraryById)
-  .patch(libraryController.updateLibraryName)
-  .delete(libraryController.deleteLibrary);
+  .get(wrapController(libraryController.getLibraryById))
+  .patch(wrapController(libraryController.updateLibraryName))
+  .delete(wrapController(libraryController.deleteLibrary));
 router
   .route('/library/:libraryId/book/:bookId')
-  .post(libraryController.addBookToLibrary)
-  .patch(authMiddleware.authorization, libraryController.editBookStatus)
-  .delete(libraryController.deleteBook);
+  .post(wrapController(libraryController.addBookToLibrary))
+  .patch(
+    authMiddleware.authorization,
+    wrapController(libraryController.editBookStatus),
+  )
+  .delete(wrapController(libraryController.deleteBook));
 
 //AUTHENTIFICATION
 router.post('/register', wrapController(authController.register));
@@ -43,19 +46,28 @@ router
   .route('/library')
   .get(
     authMiddleware.authorization,
-    libraryController.getLibrariesWithBooksByUserId,
+    wrapController(libraryController.getLibrariesWithBooksByUserId),
   )
-  .post(authMiddleware.authorization, libraryController.createNewLibrary);
+  .post(
+    authMiddleware.authorization,
+    wrapController(libraryController.createNewLibrary),
+  );
 
 router
   .route('/libraries/books')
   .get(
     authMiddleware.authorization,
-    libraryController.getLibrariesWithBooksByUserId,
+    wrapController(libraryController.getLibrariesWithBooksByUserId),
   );
 
 //USER
 router
   .route('/user')
-  .get(authMiddleware.authorization, userController.getUserDatas)
-  .patch(authMiddleware.authorization, userController.updateUserDatas);
+  .get(
+    authMiddleware.authorization,
+    wrapController(userController.getUserDatas),
+  )
+  .patch(
+    authMiddleware.authorization,
+    wrapController(userController.updateUserDatas),
+  );

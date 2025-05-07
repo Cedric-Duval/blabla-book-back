@@ -27,9 +27,3 @@ export class UnauthorizedError extends AppError {
     super(message, field, 401);
   }
 }
-
-export class ConflictError extends AppError {
-  constructor(message = 'Conflit de ressource', field = 'field') {
-    super(message, field, 409);
-  }
-}
