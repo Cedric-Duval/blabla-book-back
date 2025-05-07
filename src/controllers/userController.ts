@@ -1,6 +1,8 @@
 import bcrypt from 'bcrypt';
 import { ZodError } from 'zod';
-import { User, Library, Book } from '../models/association.model.js';
+import { NotFoundError } from '../errors/customErrors.js';
+import { User } from '../models/association.model.js';
+
 import { userDatasUpdate, userIdSchema } from '../schemas/user.schema.js';
 
 export const userController = {
@@ -15,8 +17,8 @@ export const userController = {
         }
       });
 
-      if (!user) {
-        return res.status(404).json({ error: 'Utilisateur non trouvé' });
+    if (!user) {
+      throw new NotFoundError('Utilisateur non trouvé', 'tokenId');
       }
 
       res.status(200).json(user);
@@ -27,27 +29,27 @@ export const userController = {
       console.error(error);
       res.status(500).json({ error: 'Erreur interne du serveur' });
     }
+
+    res.status(200).json(user);
   },
 
   async updateUserDatas(req, res) {
-    try {
-      const parsedData = userIdSchema.parse({ id: req.user?.id });
-      const updatedDatas = req.body;
+    const parsedData = userIdSchema.parse({ id: req.user?.id });
+    const updatedDatas = req.body;
 
-      console.log(updatedDatas);
+    await userDatasUpdate.parseAsync(updatedDatas);
 
-      await userDatasUpdate.parseAsync(updatedDatas);
 
-      if (updatedDatas.password) {
-        const hashedPassword = await bcrypt.hash(updatedDatas.password, 10);
-        updatedDatas.password = hashedPassword;
-      }
+    if (updatedDatas.password) {
+      const hashedPassword = await bcrypt.hash(updatedDatas.password, 10);
+      updatedDatas.password = hashedPassword;
+    }
 
-      const user = await User.findByPk(parsedData.id);
+    const user = await User.findByPk(parsedData.id);
 
-      if (!user) {
-        return res.status(404).json({ error: 'Utilisateur non trouvé' });
-      }
+    if (!user) {
+      throw new NotFoundError('Utilisateur non trouvé', 'tokenId');
+    }
 
       const isMatch = await bcrypt.compare(updatedDatas.currentPassword, user.dataValues.password);
 
@@ -71,12 +73,6 @@ export const userController = {
       const currentUser = await user.update(newUpdatedDatas);
       const { password, ...safeUser } = currentUser.get({ plain: true });
 
-      res.status(200).json(safeUser);
-    } catch (error) {
-      if (error instanceof ZodError) {
-        return res.status(400).json({ error: 'Format des données non valide' });
-      }
-      res.status(500).json({ error: 'Erreur interne du serveur' });
-    }
+    res.status(200).json(safeUser);
   },
 };

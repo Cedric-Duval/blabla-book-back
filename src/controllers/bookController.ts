@@ -26,7 +26,7 @@ export const bookController = {
     const oneBook = await Book.findByPk(parsedData.id);
 
     if (!oneBook) {
-      throw new NotFoundError('Livre introuvable');
+      throw new NotFoundError('Livre introuvable', 'URL');
     }
 
     res.status(200).json(oneBook);

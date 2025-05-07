@@ -30,3 +30,7 @@ export const bookAndLibrarySchema = z.object({
     .regex(/^[1-9]\d*$/)
     .transform(Number),
 });
+
+export const addBookToLibrarySchema = z.object({
+  read: z.boolean(),
+});
