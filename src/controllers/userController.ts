@@ -30,12 +30,17 @@ export const userController = {
     const user = await User.findByPk(parsedData.id);
     checkFoundUser(user);
 
-    if (updatedDatas.password) {
+    if (updatedDatas.newPassword) {
       await checkPassword(updatedDatas.currentPassword, user.password);
-      checkConfirmPassword(updatedDatas.password, updatedDatas.confirmPassword);
+      checkConfirmPassword(
+        updatedDatas.newPassword,
+        updatedDatas.confirmPassword,
+      );
 
-      const hashedPassword = await hashPassword(updatedDatas.password);
+      const hashedPassword = await hashPassword(updatedDatas.newPassword);
+      console.log(updatedDatas.newPassword);
       updatedDatas.password = hashedPassword;
+      console.log(updatedDatas.password);
     }
 
     const currentUser = await user.update(updatedDatas);

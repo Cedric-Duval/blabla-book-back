@@ -1,4 +1,8 @@
-import { BadRequestError, NotFoundError } from './customErrors.js';
+import {
+  BadRequestError,
+  NotFoundError,
+  UnauthorizedError,
+} from './customErrors.js';
 
 export function checkFoundLibrary(data) {
   if (!data) {
@@ -21,6 +25,12 @@ export function checkFoundSecret(data) {
 export function checkFoundUser(data) {
   if (!data) {
     throw new NotFoundError('Utilisateur non trouvé', 'tokenId');
+  }
+}
+
+export function checkFoundToken(data) {
+  if (!data) {
+    throw new UnauthorizedError('Token manquant', 'token');
   }
 }
 
