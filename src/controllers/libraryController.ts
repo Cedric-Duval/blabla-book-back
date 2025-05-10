@@ -3,7 +3,12 @@ import {
   checkFoundLibrary,
   checkRelationLibraryBook,
 } from '../errors/checkErros.js';
-import { Book, Library, LibraryBook } from '../models/association.model.js';
+import {
+  Book,
+  Genre,
+  Library,
+  LibraryBook,
+} from '../models/association.model.js';
 import {
   addBookToLibrarySchema,
   bookAndLibrarySchema,
@@ -33,6 +38,7 @@ export const libraryController = {
       where: { user_id: parsedData.id },
       include: {
         model: Book,
+        include: Genre,
       },
     });
 
