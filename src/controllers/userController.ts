@@ -38,9 +38,7 @@ export const userController = {
       );
 
       const hashedPassword = await hashPassword(updatedDatas.newPassword);
-      console.log(updatedDatas.newPassword);
       updatedDatas.password = hashedPassword;
-      console.log(updatedDatas.password);
     }
 
     const currentUser = await user.update(updatedDatas);
