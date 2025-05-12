@@ -2,22 +2,17 @@ import {
   checkExistingBookinLibrary,
   checkFoundLibrary,
   checkRelationLibraryBook,
-} from '../errors/checkErros.js';
-import {
-  Book,
-  Genre,
-  Library,
-  LibraryBook,
-} from '../models/association.model.js';
+} from '../errors/checkErros';
+import { Book, Genre, Library, LibraryBook } from '../models/association.model';
 import {
   addBookToLibrarySchema,
   bookAndLibrarySchema,
   libraryCreateSchema,
   libraryUpdateSchema,
   switchBookLibrarySchema,
-} from '../schemas/library.schema.js';
-import { paramsIdSchema } from '../schemas/params.schema.js';
-import { userIdSchema } from '../schemas/user.schema.js';
+} from '../schemas/library.schema';
+import { paramsIdSchema } from '../schemas/params.schema';
+import { userIdSchema } from '../schemas/user.schema';
 
 export const libraryController = {
   //Get all the libraries from the user

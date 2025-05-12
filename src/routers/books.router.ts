@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { bookController } from '../controllers/bookController.js';
-import { wrapController } from '../middlewares/wrapController.js';
+import { bookController } from '../controllers/bookController';
+import { wrapController } from '../middlewares/wrapController';
 
 export const booksRouter = Router();
 

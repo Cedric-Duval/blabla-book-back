@@ -2,14 +2,10 @@ import {
   checkExistingEmail,
   checkExistingUser,
   checkFoundSecret,
-} from '../errors/checkErros.js';
-import { User } from '../models/association.model.js';
-import { createUser, loginUser } from '../schemas/auth.schema.js';
-import {
-  checkPassword,
-  createToken,
-  hashPassword,
-} from '../utils/authUtils.js';
+} from '../errors/checkErros';
+import { User } from '../models/association.model';
+import { createUser, loginUser } from '../schemas/auth.schema';
+import { checkPassword, createToken, hashPassword } from '../utils/authUtils';
 
 export const authController = {
   async register(req, res) {

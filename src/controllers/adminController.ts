@@ -1,7 +1,7 @@
-import { checkExistingBook, checkFoundBook } from '../errors/checkErros.js';
-import { Book, LibraryBook } from '../models/association.model.js';
-import { createBookSchema, editBookSchema } from '../schemas/book.schema.js';
-import { paramsIdSchema } from '../schemas/params.schema.js';
+import { checkExistingBook, checkFoundBook } from '../errors/checkErros';
+import { Book, LibraryBook } from '../models/association.model';
+import { createBookSchema, editBookSchema } from '../schemas/book.schema';
+import { paramsIdSchema } from '../schemas/params.schema';
 
 export const adminController = {
   async createBook(req, res) {

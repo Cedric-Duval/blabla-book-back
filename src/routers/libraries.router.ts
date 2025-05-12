@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { libraryController } from '../controllers/libraryController.js';
-import { authMiddleware } from '../middlewares/authMiddleware.js';
-import { wrapController } from '../middlewares/wrapController.js';
+import { libraryController } from '../controllers/libraryController';
+import { authMiddleware } from '../middlewares/authMiddleware';
+import { wrapController } from '../middlewares/wrapController';
 
 export const librariesRouter = Router();
 
