@@ -30,6 +30,9 @@ export const userController = {
     const user = await User.findByPk(parsedData.id);
     checkFoundUser(user);
 
+    console.log(updatedDatas);
+    console.log(user);
+
     if (updatedDatas.newPassword) {
       await checkPassword(updatedDatas.currentPassword, user.password);
       checkConfirmPassword(
@@ -44,7 +47,6 @@ export const userController = {
     const currentUser = await user.update(updatedDatas);
     const { password, ...safeUser } = currentUser.get({ plain: true });
 
-    console.log(safeUser);
     res.status(200).json(safeUser);
   },
 };
