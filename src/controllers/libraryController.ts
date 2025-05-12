@@ -189,7 +189,7 @@ export const libraryController = {
   },
 
   async switchBookLibrary(req, res) {
-    const parsedId = userIdSchema.parse({ id: 2 });
+    const parsedId = userIdSchema.parse({ id: req.user.id });
     const parsedData = switchBookLibrarySchema.parse(req.params);
 
     const currentLibraryBook = await LibraryBook.findOne({
