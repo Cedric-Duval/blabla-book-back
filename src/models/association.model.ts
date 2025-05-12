@@ -1,8 +1,8 @@
-import { Book } from './book.model.js';
-import { Genre } from './genre.model.js';
-import { Library } from './library.model.js';
-import { LibraryBook } from './library_book.model.js';
-import { User } from './user.model.js';
+import { Book } from './book.model';
+import { Genre } from './genre.model';
+import { Library } from './library.model';
+import { LibraryBook } from './library_book.model';
+import { User } from './user.model';
 
 //Relation 1 to many User/Library
 User.hasMany(Library, {

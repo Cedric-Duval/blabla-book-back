@@ -1,9 +1,9 @@
-import { checkConfirmPassword, checkFoundUser } from '../errors/checkErros.js';
-import { User } from '../models/association.model.js';
-import { Library } from '../models/association.model.js';
-import { Book } from '../models/association.model.js';
-import { userDatasUpdate, userIdSchema } from '../schemas/user.schema.js';
-import { checkPassword, hashPassword } from '../utils/authUtils.js';
+import { checkConfirmPassword, checkFoundUser } from '../errors/checkErros';
+import { User } from '../models/association.model';
+import { Library } from '../models/association.model';
+import { Book } from '../models/association.model';
+import { userDatasUpdate, userIdSchema } from '../schemas/user.schema';
+import { checkPassword, hashPassword } from '../utils/authUtils';
 
 export const userController = {
   async getUserDatas(req, res) {

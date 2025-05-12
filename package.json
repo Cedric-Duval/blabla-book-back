@@ -4,7 +4,7 @@
   "description": "��#\u0000 \u0000b\u0000l\u0000a\u0000b\u0000l\u0000a\u0000-\u0000b\u0000o\u0000o\u0000k\u0000\r\u0000 \u0000",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --verbose",
     "dev": "nodemon",
     "model:test": "node --loader ts-node/esm --no-warnings src/models/models.test.ts",
     "db:create": "psql -U blablabook -d blablabook -f ./src/migrations/create_tables.sql",

@@ -1,12 +1,12 @@
-import type { Book } from '../models/book.model.js';
-import type { Library } from '../models/library.model.js';
-import type { LibraryBook } from '../models/library_book.model.js';
-import type { User } from '../models/user.model.js';
+import type { Book } from '../models/book.model';
+import type { Library } from '../models/library.model';
+import type { LibraryBook } from '../models/library_book.model';
+import type { User } from '../models/user.model';
 import {
   BadRequestError,
   NotFoundError,
   UnauthorizedError,
-} from './customErrors.js';
+} from './customErrors';
 
 export function checkFoundLibrary(data: Library | null) {
   if (!data) {

@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { adminController } from '../controllers/adminController.js';
-import { wrapController } from '../middlewares/wrapController.js';
+import { adminController } from '../controllers/adminController';
+import { wrapController } from '../middlewares/wrapController';
 
 export const adminRouter = Router();
 
