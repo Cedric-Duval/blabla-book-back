@@ -14,6 +14,7 @@ import {
   bookAndLibrarySchema,
   libraryCreateSchema,
   libraryUpdateSchema,
+  switchBookLibrarySchema,
 } from '../schemas/library.schema.js';
 import { paramsIdSchema } from '../schemas/params.schema.js';
 import { userIdSchema } from '../schemas/user.schema.js';
@@ -156,6 +157,7 @@ export const libraryController = {
       where: { user_id: parsedId.id },
       include: {
         model: Book,
+        include: Genre,
       },
     });
 
@@ -184,5 +186,38 @@ export const libraryController = {
     });
 
     res.status(200).json(userLibraries);
+  },
+
+  async switchBookLibrary(req, res) {
+    const parsedId = userIdSchema.parse({ id: 2 });
+    const parsedData = switchBookLibrarySchema.parse(req.params);
+
+    const currentLibraryBook = await LibraryBook.findOne({
+      where: {
+        library_id: parsedData.libraryId,
+        book_id: parsedData.bookId,
+      },
+    });
+
+    // TODO check if user is owner of alls libraries
+
+    checkRelationLibraryBook(currentLibraryBook);
+
+    await LibraryBook.create({
+      library_id: parsedData.newLibraryId,
+      book_id: parsedData.bookId,
+      read: currentLibraryBook?.read,
+    });
+    await currentLibraryBook?.destroy();
+
+    const currentLibrary = await Library.findAll({
+      where: { user_id: parsedId.id },
+      include: {
+        model: Book,
+        include: Genre,
+      },
+    });
+
+    res.status(200).json(currentLibrary);
   },
 };

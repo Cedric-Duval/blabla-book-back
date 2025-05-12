@@ -74,7 +74,7 @@ Content-Type: application/json
 }
 
 ### Get one library by id (with books)
-GET http://localhost:3000/library/4
+GET http://localhost:3000/library/7
 
 ###Edit a library by id
 PATCH http://localhost:3000/library/3
@@ -86,6 +86,10 @@ Content-Type: application/json
 
 ### Delete a library by id
 DELETE http://localhost:3000/library/2
+
+
+###Switch a book in library
+PATCH http://localhost:3000/library/6/book/1/newLibrary/8
 
 
 //----------------------------------------------------AUTHENTIFICATION-------------------------------------------------------------

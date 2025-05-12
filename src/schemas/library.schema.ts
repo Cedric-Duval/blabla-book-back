@@ -34,3 +34,18 @@ export const bookAndLibrarySchema = z.object({
 export const addBookToLibrarySchema = z.object({
   read: z.boolean(),
 });
+
+export const switchBookLibrarySchema = z.object({
+  libraryId: z
+    .string()
+    .regex(/^[1-9]\d*$/)
+    .transform(Number),
+  bookId: z
+    .string()
+    .regex(/^[1-9]\d*$/)
+    .transform(Number),
+  newLibraryId: z
+    .string()
+    .regex(/^[1-9]\d*$/)
+    .transform(Number),
+});
