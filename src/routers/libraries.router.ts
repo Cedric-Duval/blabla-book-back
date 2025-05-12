@@ -23,4 +23,4 @@ librariesRouter.route('/libraries/books')
   .get(authMiddleware.authorization, wrapController(libraryController.getLibrariesWithBooksByUserId));
 
 librariesRouter.route('/library/:libraryId/book/:bookId/newLibrary/:newLibraryId')
-  .patch(wrapController(libraryController.switchBookLibrary));
+  .patch(authMiddleware.authorization, wrapController(libraryController.switchBookLibrary));
