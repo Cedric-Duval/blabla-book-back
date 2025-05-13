@@ -39,12 +39,6 @@ describe('bookController.getOneBookById', () => {
     });
   });
 
-  it('devrait appeler checkFoundBook avec le résultat', async () => {
-    const spy = jest.spyOn(errorUtils, 'checkFoundBook');
-    await bookController.getOneBookById(req, res);
-    expect(spy).toHaveBeenCalledWith(fakeBook);
-  });
-
   it('devrait répondre avec un statut 200', async () => {
     await bookController.getOneBookById(req, res);
     expect(res.status).toHaveBeenCalledWith(200);
@@ -53,5 +47,21 @@ describe('bookController.getOneBookById', () => {
   it('devrait renvoyer le livre en JSON', async () => {
     await bookController.getOneBookById(req, res);
     expect(res.json).toHaveBeenCalledWith(fakeBook);
+  });
+
+  it('devrait appeler checkFoundBook avec le résultat', async () => {
+    const spy = jest.spyOn(errorUtils, 'checkFoundBook');
+    await bookController.getOneBookById(req, res);
+    expect(spy).toHaveBeenCalledWith(fakeBook);
+  });
+
+  it('devrait lever une erreur avec un id négatif', async () => {
+    req = {
+      params: { id: '-2' },
+    } as unknown as Request;
+
+    await expect(bookController.getOneBookById(req, res)).rejects.toThrow(
+      "Format d'url invalide",
+    );
   });
 });

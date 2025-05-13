@@ -1,3 +1,4 @@
+import type { Request, Response } from 'express';
 import {
   checkExistingEmail,
   checkExistingUser,
@@ -8,7 +9,7 @@ import { createUser, loginUser } from '../schemas/auth.schema';
 import { checkPassword, createToken, hashPassword } from '../utils/authUtils';
 
 export const authController = {
-  async register(req, res) {
+  async register(req: Request, res: Response) {
     const parsedData = createUser.parse(req.body);
 
     const existingUser = await User.findOne({
@@ -29,7 +30,7 @@ export const authController = {
     res.status(201).json(newUser);
   },
 
-  async login(req, res) {
+  async login(req: Request, res: Response) {
     const parsedData = loginUser.parse(req.body);
 
     const currentUser = await User.findOne({
