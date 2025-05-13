@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { checkFoundToken, checkFoundUser } from '../errors/checkErros';
-import { NotFoundError, UnauthorizedError } from '../errors/customErrors';
+import { UnauthorizedError } from '../errors/customErrors';
 import { User } from '../models/association.model';
 
 export const authMiddleware = {

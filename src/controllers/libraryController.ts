@@ -1,3 +1,4 @@
+import type { Request, Response } from 'express';
 import {
   checkExistingBookinLibrary,
   checkFoundLibrary,
@@ -14,9 +15,18 @@ import {
 import { paramsIdSchema } from '../schemas/params.schema';
 import { userIdSchema } from '../schemas/user.schema';
 
+interface AuthenticatedRequest extends Request {
+  user: {
+    id: string;
+  };
+}
+
 export const libraryController = {
   //Get all the libraries from the user
-  async getLibrariesWithoutBooksByUserId(req, res) {
+  async getLibrariesWithoutBooksByUserId(
+    req: AuthenticatedRequest,
+    res: Response,
+  ) {
     const parsedData = userIdSchema.parse({ id: req.user.id });
     const userLibraries = await Library.findAll({
       where: { user_id: parsedData.id },
@@ -28,7 +38,10 @@ export const libraryController = {
   },
 
   //Get all the libraries from the user
-  async getLibrariesWithBooksByUserId(req, res) {
+  async getLibrariesWithBooksByUserId(
+    req: AuthenticatedRequest,
+    res: Response,
+  ) {
     const parsedData = userIdSchema.parse({ id: req.user.id });
     const userLibraries = await Library.findAll({
       where: { user_id: parsedData.id },
@@ -44,7 +57,7 @@ export const libraryController = {
   },
 
   //Get a single library from its ID
-  async getLibraryById(req, res) {
+  async getLibraryById(req: Request, res: Response) {
     const parsedData = paramsIdSchema.parse(req.params);
     const userLibrary = await Library.findByPk(parsedData.id, {
       include: {
@@ -57,16 +70,16 @@ export const libraryController = {
     res.status(200).json(userLibrary);
   },
 
-  async createNewLibrary(req, res) {
+  async createNewLibrary(req: AuthenticatedRequest, res: Response) {
     const inputData = req.body;
-    inputData.user_id = req.user?.id;
+    inputData.user_id = req.user.id;
 
     await libraryCreateSchema.parseAsync(inputData);
     const newLibrary = await Library.create(inputData);
     res.status(201).json(newLibrary);
   },
 
-  async updateLibraryName(req, res) {
+  async updateLibraryName(req: Request, res: Response) {
     const parsedData = paramsIdSchema.parse(req.params);
     const inputData = req.body;
     await libraryUpdateSchema.parseAsync(inputData);
@@ -78,7 +91,7 @@ export const libraryController = {
     res.status(200).json(userLibrary);
   },
 
-  async deleteLibrary(req, res) {
+  async deleteLibrary(req: Request, res: Response) {
     const parsedData = paramsIdSchema.parse(req.params);
     const userLibrary = await Library.findByPk(parsedData.id);
 
@@ -92,7 +105,7 @@ export const libraryController = {
     res.status(200).json({ message: 'Bibliothèque supprimée avec succès' });
   },
 
-  async addBookToLibrary(req, res) {
+  async addBookToLibrary(req: Request, res: Response) {
     const parsedId = bookAndLibrarySchema.parse(req.params);
     const parsedData = addBookToLibrarySchema.parse(req.body);
 
@@ -107,7 +120,7 @@ export const libraryController = {
 
     checkFoundLibrary(currentLibrary);
 
-    const existingBook = currentLibrary.Books.find(
+    const existingBook = currentLibrary?.Books.find(
       (book) => book.id === parsedId.bookId,
     );
 
@@ -131,7 +144,7 @@ export const libraryController = {
     res.status(200).json(newLibrary);
   },
 
-  async editBookStatus(req, res) {
+  async editBookStatus(req: AuthenticatedRequest, res: Response) {
     const parsedId = userIdSchema.parse({ id: req.user.id });
     const parsedData = bookAndLibrarySchema.parse(req.params);
 
@@ -159,7 +172,7 @@ export const libraryController = {
     res.status(200).json(currentLibrary);
   },
 
-  async deleteBook(req, res) {
+  async deleteBook(req: AuthenticatedRequest, res: Response) {
     const parsedData = bookAndLibrarySchema.parse(req.params);
     const parsedId = userIdSchema.parse({ id: req.user.id });
 
@@ -183,7 +196,7 @@ export const libraryController = {
     res.status(200).json(userLibraries);
   },
 
-  async switchBookLibrary(req, res) {
+  async switchBookLibrary(req: AuthenticatedRequest, res: Response) {
     const parsedId = userIdSchema.parse({ id: req.user.id });
     const parsedData = switchBookLibrarySchema.parse(req.params);
 
