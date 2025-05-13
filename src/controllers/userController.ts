@@ -1,8 +1,10 @@
+
 import type { Request, Response } from 'express';
 import { checkConfirmPassword, checkFoundUser } from '../errors/checkErros';
 import { User } from '../models/association.model';
 import { Library } from '../models/association.model';
 import { Book } from '../models/association.model';
+import { LibraryBook } from '../models/association.model.js';
 import { userDatasUpdate, userIdSchema } from '../schemas/user.schema';
 import { checkPassword, hashPassword } from '../utils/authUtils';
 
@@ -37,8 +39,9 @@ export const userController = {
     const user = await User.findByPk(parsedData.id);
     checkFoundUser(user);
 
+    await checkPassword(updatedDatas.currentPassword, user.password);
+
     if (updatedDatas.newPassword) {
-      await checkPassword(updatedDatas.currentPassword, user.password);
       checkConfirmPassword(
         updatedDatas.newPassword,
         updatedDatas.confirmPassword,
@@ -51,7 +54,44 @@ export const userController = {
     const currentUser = await user.update(updatedDatas);
     const { password, ...safeUser } = currentUser.get({ plain: true });
 
-    console.log(safeUser);
     res.status(200).json(safeUser);
   },
+
+  async deleteUserDatas(req, res) {
+    const parsedData = userIdSchema.parse({ id: req.user?.id });
+
+    console.log(req.body);
+
+    const deleteData = req.body;
+
+    const user = await User.findByPk(parsedData.id);
+    checkFoundUser(user);
+    
+    const libraries = await Library.findAll({
+      where: {
+        user_id: parsedData.id
+      }
+    })
+
+    console.log(libraries);
+
+    await checkPassword(deleteData.currentPassword, user.password);
+    checkConfirmPassword(deleteData.currentPassword, deleteData.confirmPassword);
+
+    
+    for (const library of libraries) {
+      await LibraryBook.destroy({where: { library_id: library.id}})
+      await library.destroy();
+    }
+
+    //await Promise.all(libraries.map(library => library.destroy())); => Suppression en parallèle
+
+    await user?.destroy();
+
+    res.status(200).json({ message: 'Votre compte a bien été supprimé. Merci d\'avoir utilisé Blabla Book'});
+  },
+
+
+
 };
+
