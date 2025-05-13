@@ -2,6 +2,7 @@ import { checkConfirmPassword, checkFoundUser } from '../errors/checkErros.js';
 import { User } from '../models/association.model.js';
 import { Library } from '../models/association.model.js';
 import { Book } from '../models/association.model.js';
+import { LibraryBook } from '../models/association.model.js';
 import { userDatasUpdate, userIdSchema } from '../schemas/user.schema.js';
 import { checkPassword, hashPassword } from '../utils/authUtils.js';
 
@@ -50,15 +51,32 @@ export const userController = {
 
   async deleteUserDatas(req, res) {
     const parsedData = userIdSchema.parse({ id: req.user?.id });
+
+    console.log(req.body);
+
     const deleteData = req.body;
-  
-    await userDatasUpdate.parseAsync(deleteData);
-  
+
     const user = await User.findByPk(parsedData.id);
     checkFoundUser(user);
+    
+    const libraries = await Library.findAll({
+      where: {
+        user_id: parsedData.id
+      }
+    })
+
+    console.log(libraries);
 
     await checkPassword(deleteData.currentPassword, user.password);
     checkConfirmPassword(deleteData.currentPassword, deleteData.confirmPassword);
+
+    
+    for (const library of libraries) {
+      await LibraryBook.destroy({where: { library_id: library.id}})
+      await library.destroy();
+    }
+
+    //await Promise.all(libraries.map(library => library.destroy())); => Suppression en parallèle
 
     await user?.destroy();
 
