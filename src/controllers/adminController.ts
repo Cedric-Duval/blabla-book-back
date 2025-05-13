@@ -1,10 +1,11 @@
-import { checkExistingBook, checkFoundBook } from '../errors/checkErros.js';
-import { Book, LibraryBook } from '../models/association.model.js';
-import { createBookSchema, editBookSchema } from '../schemas/book.schema.js';
-import { paramsIdSchema } from '../schemas/params.schema.js';
+import type { Request, Response } from 'express';
+import { checkExistingBook, checkFoundBook } from '../errors/checkErros';
+import { Book, LibraryBook } from '../models/association.model';
+import { createBookSchema, editBookSchema } from '../schemas/book.schema';
+import { paramsIdSchema } from '../schemas/params.schema';
 
 export const adminController = {
-  async createBook(req, res) {
+  async createBook(req: Request, res: Response) {
     const parsedData = createBookSchema.parse(req.body);
     const existingBook = await Book.findOne({
       where: { isbn: parsedData.isbn },
@@ -16,7 +17,7 @@ export const adminController = {
     res.status(201).json(newBook);
   },
 
-  async editBook(req, res) {
+  async editBook(req: Request, res: Response) {
     const parsedParams = paramsIdSchema.parse(req.params);
     const parsedData = editBookSchema.parse(req.body);
     const currentBook = await Book.findByPk(parsedParams.id);
@@ -27,7 +28,7 @@ export const adminController = {
     res.status(200).json(currentBook);
   },
 
-  async deleteBook(req, res) {
+  async deleteBook(req: Request, res: Response) {
     const parsedParams = paramsIdSchema.parse(req.params);
     const currentBook = await Book.findByPk(parsedParams.id);
 

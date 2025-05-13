@@ -1,10 +1,11 @@
+import type { Request, Response } from 'express';
 import { Sequelize } from 'sequelize';
-import { checkFoundBook } from '../errors/checkErros.js';
-import { Book, Genre } from '../models/association.model.js';
-import { paramsIdSchema } from '../schemas/params.schema.js';
+import { checkFoundBook } from '../errors/checkErros';
+import { Book, Genre } from '../models/association.model';
+import { paramsIdSchema } from '../schemas/params.schema';
 
 export const bookController = {
-  async getFiveRandomBooks(req, res) {
+  async getFiveRandomBooks(req: Request, res: Response) {
     const randomBooks = await Book.findAll({
       order: Sequelize.literal('RANDOM()'), //  Randomize order
       limit: 5,
@@ -12,15 +13,14 @@ export const bookController = {
     res.status(200).json(randomBooks);
   },
 
-  async getAllBooks(req, res) {
+  async getAllBooks(req: Request, res: Response) {
     const allBooks = await Book.findAll({
       order: [['publication_year', 'DESC']],
     });
-    console.log(JSON.stringify(allBooks, null, 2));
     res.status(200).json(allBooks);
   },
 
-  async getOneBookById(req, res) {
+  async getOneBookById(req: Request, res: Response) {
     const parsedData = paramsIdSchema.parse(req.params);
     const oneBook = await Book.findOne({
       where: { id: parsedData.id },

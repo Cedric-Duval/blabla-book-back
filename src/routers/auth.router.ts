@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { authController } from '../controllers/authController.js';
-import { wrapController } from '../middlewares/wrapController.js';
+import { authController } from '../controllers/authController';
+import { wrapController } from '../middlewares/wrapController';
 
 export const authRouter = Router();
 

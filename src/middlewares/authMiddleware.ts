@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { checkFoundToken, checkFoundUser } from '../errors/checkErros.js';
-import { NotFoundError, UnauthorizedError } from '../errors/customErrors.js';
-import { User } from '../models/association.model.js';
+import { checkFoundToken, checkFoundUser } from '../errors/checkErros';
+import { UnauthorizedError } from '../errors/customErrors';
+import { User } from '../models/association.model';
 
 export const authMiddleware = {
   async authorization(req, res, next) {

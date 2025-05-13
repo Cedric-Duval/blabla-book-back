@@ -1,13 +1,21 @@
-import { checkConfirmPassword, checkFoundUser } from '../errors/checkErros.js';
-import { User } from '../models/association.model.js';
-import { Library } from '../models/association.model.js';
-import { Book } from '../models/association.model.js';
+
+import type { Request, Response } from 'express';
+import { checkConfirmPassword, checkFoundUser } from '../errors/checkErros';
+import { User } from '../models/association.model';
+import { Library } from '../models/association.model';
+import { Book } from '../models/association.model';
 import { LibraryBook } from '../models/association.model.js';
-import { userDatasUpdate, userIdSchema } from '../schemas/user.schema.js';
-import { checkPassword, hashPassword } from '../utils/authUtils.js';
+import { userDatasUpdate, userIdSchema } from '../schemas/user.schema';
+import { checkPassword, hashPassword } from '../utils/authUtils';
+
+interface AuthenticatedRequest extends Request {
+  user: {
+    id: string;
+  };
+}
 
 export const userController = {
-  async getUserDatas(req, res) {
+  async getUserDatas(req: AuthenticatedRequest, res: Response) {
     const parsedData = userIdSchema.parse({ id: req.user.id });
     const user = await User.findByPk(parsedData.id, {
       attributes: { exclude: ['password'] },
@@ -22,8 +30,8 @@ export const userController = {
     res.status(200).json(user);
   },
 
-  async updateUserDatas(req, res) {
-    const parsedData = userIdSchema.parse({ id: req.user?.id });
+  async updateUserDatas(req: AuthenticatedRequest, res: Response) {
+    const parsedData = userIdSchema.parse({ id: req.user.id });
     const updatedDatas = req.body;
 
     await userDatasUpdate.parseAsync(updatedDatas);

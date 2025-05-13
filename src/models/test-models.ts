@@ -1,4 +1,4 @@
-import { Book, Genre, Library, User } from './association.model.js';
+import { Book, Genre, Library, User } from './association.model';
 
 //*--------------------------------------------------------------------------------------------
 //*-----------------------------------------------BOOK-----------------------------------------
