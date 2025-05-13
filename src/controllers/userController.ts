@@ -47,4 +47,25 @@ export const userController = {
 
     res.status(200).json(safeUser);
   },
+
+  async deleteUserDatas(req, res) {
+    const parsedData = userIdSchema.parse({ id: req.user?.id });
+    const deleteData = req.body;
+  
+    await userDatasUpdate.parseAsync(deleteData);
+  
+    const user = await User.findByPk(parsedData.id);
+    checkFoundUser(user);
+
+    await checkPassword(deleteData.currentPassword, user.password);
+    checkConfirmPassword(deleteData.currentPassword, deleteData.confirmPassword);
+
+    await user?.destroy();
+
+    res.status(200).json({ message: 'Votre compte a bien été supprimé. Merci d\'avoir utilisé Blabla Book'});
+  },
+
+
+
 };
+
