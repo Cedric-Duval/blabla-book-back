@@ -34,7 +34,7 @@ export const authController = {
     const parsedData = loginUser.parse(req.body);
 
     const currentUser = await User.findOne({
-      where: { email: parsedData.email },
+      where: { email: parsedData.email.toLowerCase() },
     });
 
     checkExistingEmail(currentUser);
