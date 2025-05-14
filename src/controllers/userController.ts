@@ -33,11 +33,15 @@ export const userController = {
   async updateUserDatas(req: AuthenticatedRequest, res: Response) {
     const parsedData = userIdSchema.parse({ id: req.user.id });
     const updatedDatas = req.body;
-
-    await userDatasUpdate.parseAsync(updatedDatas);
+  
+    if (updatedDatas.name != null) {
+      await userDatasUpdate.parseAsync(updatedDatas);
+    }
 
     const user = await User.findByPk(parsedData.id);
     checkFoundUser(user);
+
+    console.log(user);
 
     await checkPassword(updatedDatas.currentPassword, user.password);
 
