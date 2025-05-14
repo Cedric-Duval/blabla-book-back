@@ -5,7 +5,13 @@ import {
   checkFoundUser,
   checkRelationLibraryBook,
 } from '../errors/checkErros';
-import { User, Book, Genre, Library, LibraryBook } from '../models/association.model';
+import {
+  Book,
+  Genre,
+  Library,
+  LibraryBook,
+  User,
+} from '../models/association.model';
 import {
   addBookToLibrarySchema,
   bookAndLibrarySchema,
@@ -53,7 +59,7 @@ export const libraryController = {
       },
     });
 
-    checkFoundLibrary(userLibraries[0]);
+    //checkFoundLibrary(userLibraries[0]);
 
     res.status(200).json(userLibraries);
   },
@@ -94,13 +100,11 @@ export const libraryController = {
   },
 
   async deleteLibrary(req: Request, res: Response) {
-
     console.log(req.user?.id);
     const parsedData = paramsIdSchema.parse(req.params);
     const userLibrary = await Library.findByPk(parsedData.id);
-    
-    checkFoundLibrary(userLibrary);
 
+    checkFoundLibrary(userLibrary);
 
     const parsedUserData = userIdSchema.parse({ id: req.user?.id });
     const user = await User.findByPk(parsedUserData.id);
@@ -115,7 +119,9 @@ export const libraryController = {
 
     //Check if the user is the owner of the library
     if (userLibrary.user_id !== user.id) {
-      return res.status(403).json({ message: "Vous n'êtes pas autorisé à supprimer cette bibliothèque." });
+      return res.status(403).json({
+        message: "Vous n'êtes pas autorisé à supprimer cette bibliothèque.",
+      });
     }
 
     await LibraryBook.destroy({ where: { library_id: parsedData.id } });
