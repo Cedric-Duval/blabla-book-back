@@ -8,7 +8,7 @@ export const librariesRouter = Router();
 librariesRouter.route('/library/:id')
   .get(wrapController(libraryController.getLibraryById))
   .patch(wrapController(libraryController.updateLibraryName))
-  .delete(wrapController(libraryController.deleteLibrary));
+  .delete(authMiddleware.authorization, wrapController(libraryController.deleteLibrary));
 
 librariesRouter.route('/library/:libraryId/book/:bookId')
   .post(wrapController(libraryController.addBookToLibrary))
