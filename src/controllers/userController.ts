@@ -60,8 +60,6 @@ export const userController = {
   async deleteUserDatas(req, res) {
     const parsedData = userIdSchema.parse({ id: req.user?.id });
 
-    console.log(req.body);
-
     const deleteData = req.body;
 
     const user = await User.findByPk(parsedData.id);
@@ -72,8 +70,6 @@ export const userController = {
         user_id: parsedData.id
       }
     })
-
-    console.log(libraries);
 
     await checkPassword(deleteData.currentPassword, user.password);
     checkConfirmPassword(deleteData.currentPassword, deleteData.confirmPassword);

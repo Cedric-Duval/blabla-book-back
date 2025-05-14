@@ -2,9 +2,10 @@ import type { Request, Response } from 'express';
 import {
   checkExistingBookinLibrary,
   checkFoundLibrary,
+  checkFoundUser,
   checkRelationLibraryBook,
 } from '../errors/checkErros';
-import { Book, Genre, Library, LibraryBook } from '../models/association.model';
+import { User, Book, Genre, Library, LibraryBook } from '../models/association.model';
 import {
   addBookToLibrarySchema,
   bookAndLibrarySchema,
@@ -14,6 +15,7 @@ import {
 } from '../schemas/library.schema';
 import { paramsIdSchema } from '../schemas/params.schema';
 import { userIdSchema } from '../schemas/user.schema';
+import { checkPassword } from '../utils/authUtils';
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -92,12 +94,29 @@ export const libraryController = {
   },
 
   async deleteLibrary(req: Request, res: Response) {
+
+    console.log(req.user?.id);
     const parsedData = paramsIdSchema.parse(req.params);
     const userLibrary = await Library.findByPk(parsedData.id);
-
+    
     checkFoundLibrary(userLibrary);
 
-    // TODO Check if the user is the owner of the library ?
+
+    const parsedUserData = userIdSchema.parse({ id: req.user?.id });
+    const user = await User.findByPk(parsedUserData.id);
+
+    checkFoundUser(user);
+
+    console.log(user);
+
+    const deleteData = req.body;
+
+    await checkPassword(deleteData.currentPassword, user.password);
+
+    //Check if the user is the owner of the library
+    if (userLibrary.user_id !== user.id) {
+      return res.status(403).json({ message: "Vous n'êtes pas autorisé à supprimer cette bibliothèque." });
+    }
 
     await LibraryBook.destroy({ where: { library_id: parsedData.id } });
     await userLibrary?.destroy();
