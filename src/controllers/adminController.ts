@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { checkExistingBook, checkFoundBook } from '../errors/checkErros';
-import { Book, LibraryBook } from '../models/association.model';
+import { Book, LibraryBook, Genre } from '../models/association.model';
 import { createBookSchema, editBookSchema } from '../schemas/book.schema';
 import { paramsIdSchema } from '../schemas/params.schema';
 
@@ -34,10 +34,13 @@ export const adminController = {
 
     checkFoundBook(currentBook);
 
+  
+
+    await currentBook.setGenres([]);
     await LibraryBook.destroy({ where: { book_id: parsedParams.id } });
     await Book.destroy({
       where: {
-        id: parsedParams.id,
+        id: parsedParams.id
       },
     });
 
