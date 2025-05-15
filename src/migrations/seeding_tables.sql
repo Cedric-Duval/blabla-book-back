@@ -4,7 +4,7 @@ BEGIN;
 INSERT INTO "user"
     ("name", "firstname", "email", "password", "admin")
 VALUES
-    ('Admin', 'Admin', 'admin@gmail.com', 'admin', true)
+    ('Admin', 'Admin', 'admin@gmail.com', '$2b$10$Jb0iPagjqpmsdlRxB8U/o.cyUvvNk58dbCXar.0utd8gb2kPJJHV2', true)
 ;
 
 

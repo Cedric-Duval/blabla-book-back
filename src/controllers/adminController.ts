@@ -1,11 +1,23 @@
 import type { Request, Response } from 'express';
 import { checkExistingBook, checkFoundBook } from '../errors/checkErros';
-import { Book, LibraryBook } from '../models/association.model';
+import { UnauthorizedError } from '../errors/customErrors';
+import { Book, LibraryBook, User } from '../models/association.model';
 import { createBookSchema, editBookSchema } from '../schemas/book.schema';
 import { paramsIdSchema } from '../schemas/params.schema';
+import { userIdSchema } from '../schemas/user.schema';
 
 export const adminController = {
   async createBook(req: Request, res: Response) {
+    const parsedUser = userIdSchema.parse({ id: req.user.id });
+
+    const user = await User.findByPk(parsedUser.id, {
+      attributes: { exclude: ['password'] },
+    });
+
+    if (!user.admin) {
+      throw new UnauthorizedError('Role admin manquant', 'admin');
+    }
+
     const parsedData = createBookSchema.parse(req.body);
     const existingBook = await Book.findOne({
       where: { isbn: parsedData.isbn },
@@ -18,6 +30,16 @@ export const adminController = {
   },
 
   async editBook(req: Request, res: Response) {
+    const parsedUser = userIdSchema.parse({ id: req.user.id });
+
+    const user = await User.findByPk(parsedUser.id, {
+      attributes: { exclude: ['password'] },
+    });
+
+    if (!user.admin) {
+      throw new UnauthorizedError('Role admin manquant', 'admin');
+    }
+
     const parsedParams = paramsIdSchema.parse(req.params);
     const parsedData = editBookSchema.parse(req.body);
     const currentBook = await Book.findByPk(parsedParams.id);
@@ -29,6 +51,16 @@ export const adminController = {
   },
 
   async deleteBook(req: Request, res: Response) {
+    const parsedUser = userIdSchema.parse({ id: req.user.id });
+
+    const user = await User.findByPk(parsedUser.id, {
+      attributes: { exclude: ['password'] },
+    });
+
+    if (!user.admin) {
+      throw new UnauthorizedError('Role admin manquant', 'admin');
+    }
+
     const parsedParams = paramsIdSchema.parse(req.params);
     const currentBook = await Book.findByPk(parsedParams.id);
 
