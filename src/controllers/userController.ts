@@ -1,4 +1,3 @@
-
 import type { Request, Response } from 'express';
 import { checkConfirmPassword, checkFoundUser } from '../errors/checkErros';
 import { User } from '../models/association.model';
@@ -33,7 +32,7 @@ export const userController = {
   async updateUserDatas(req: AuthenticatedRequest, res: Response) {
     const parsedData = userIdSchema.parse({ id: req.user.id });
     const updatedDatas = req.body;
-  
+
     if (updatedDatas.name != null) {
       await userDatasUpdate.parseAsync(updatedDatas);
     }
@@ -68,19 +67,21 @@ export const userController = {
 
     const user = await User.findByPk(parsedData.id);
     checkFoundUser(user);
-    
+
     const libraries = await Library.findAll({
       where: {
-        user_id: parsedData.id
-      }
-    })
+        user_id: parsedData.id,
+      },
+    });
 
     await checkPassword(deleteData.currentPassword, user.password);
-    checkConfirmPassword(deleteData.currentPassword, deleteData.confirmPassword);
+    checkConfirmPassword(
+      deleteData.currentPassword,
+      deleteData.confirmPassword,
+    );
 
-    
     for (const library of libraries) {
-      await LibraryBook.destroy({where: { library_id: library.id}})
+      await LibraryBook.destroy({ where: { library_id: library.id } });
       await library.destroy();
     }
 
@@ -88,10 +89,9 @@ export const userController = {
 
     await user?.destroy();
 
-    res.status(200).json({ message: 'Votre compte a bien été supprimé. Merci d\'avoir utilisé Blabla Book'});
+    res.status(200).json({
+      message:
+        "Votre compte a bien été supprimé. Merci d'avoir utilisé Blabla Book",
+    });
   },
-
-
-
 };
-

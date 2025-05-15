@@ -2,16 +2,16 @@ BEGIN;
 
 
 INSERT INTO "user"
-    ("name", "firstname", "email", "password")
+    ("name", "firstname", "email", "password", "admin")
 VALUES
-    ('Toto', 'Tata', 'toto.tata@gmail.com', 'admin')
+    ('Admin', 'Admin', 'admin@gmail.com', '$2b$10$Jb0iPagjqpmsdlRxB8U/o.cyUvvNk58dbCXar.0utd8gb2kPJJHV2', true)
 ;
 
 
 INSERT INTO "library"
     ("name", "user_id")
 VALUES
-    ('Bibliothèque de Toto', 1)
+    ('Bibliothèque d''Admin 1', 1)
 ;
 
 

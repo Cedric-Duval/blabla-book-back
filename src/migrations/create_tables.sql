@@ -14,6 +14,7 @@ CREATE TABLE "user" (
  "firstname" VARCHAR(100) NOT NULL,
  "email" VARCHAR(100) NOT NULL UNIQUE,
  "password" TEXT NOT NULL,
+ "admin" BOOLEAN NOT NULL DEFAULT false,
  "createdAt" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
  "updatedAt" timestamptz
 );
