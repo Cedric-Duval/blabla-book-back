@@ -25,6 +25,7 @@ export const authController = {
       firstname: parsedData.firstname,
       email: parsedData.email,
       password: hashedPassword,
+      admin: false,
     });
 
     res.status(201).json(newUser);
