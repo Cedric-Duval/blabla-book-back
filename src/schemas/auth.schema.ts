@@ -31,4 +31,5 @@ export const createUser = z.object({
     .string()
     .min(1, { message: 'Un mot de passe est requis' })
     .transform((data) => sanitizeHtml(data.trim())),
+  admin: z.boolean(),
 });

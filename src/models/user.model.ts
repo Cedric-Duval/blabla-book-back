@@ -25,6 +25,11 @@ User.init(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+
+    admin: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
   },
   {
     sequelize,
