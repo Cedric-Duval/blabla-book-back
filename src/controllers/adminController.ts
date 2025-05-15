@@ -66,10 +66,13 @@ export const adminController = {
 
     checkFoundBook(currentBook);
 
+  
+
+    await currentBook.setGenres([]);
     await LibraryBook.destroy({ where: { book_id: parsedParams.id } });
     await Book.destroy({
       where: {
-        id: parsedParams.id,
+        id: parsedParams.id
       },
     });
 

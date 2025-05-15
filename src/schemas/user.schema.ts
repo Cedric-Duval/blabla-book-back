@@ -20,7 +20,7 @@ export const userDatasUpdate = z
       .transform((data) => sanitizeHtml(data.trim())),
     password: z
       .string()
-      .min(8, { message: 'La longueur de votre mot de passe doit être de 8 caractères minimum'})
+      // .min(8, { message: 'La longueur de votre mot de passe doit être de 8 caractères minimum'})
       .nonempty({ message: 'Le mot de passe est requis' })
       .transform((data) => sanitizeHtml(data.trim())),
   })
