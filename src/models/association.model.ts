@@ -3,6 +3,7 @@ import { Genre } from './genre.model';
 import { Library } from './library.model';
 import { LibraryBook } from './library_book.model';
 import { User } from './user.model';
+import { Review } from './review.model';
 
 //Relation 1 to many User/Library
 User.hasMany(Library, {
@@ -38,4 +39,22 @@ Genre.belongsToMany(Book, {
   timestamps: false,
 });
 
-export { Book, Genre, Library, LibraryBook, User };
+//Relation one to many User/Review
+User.hasMany(Review, { 
+  foreignKey: 'user_id', 
+  onDelete: 'CASCADE' 
+});
+Review.belongsTo(User, { 
+  foreignKey: 'user_id' 
+});
+
+//Relation one to many Book/Reviews
+Book.hasMany(Review, { 
+  foreignKey: 'book_id', 
+  onDelete: 'CASCADE' 
+});
+Review.belongsTo(Book, { 
+  foreignKey: 'book_id' 
+});
+
+export { Book, Genre, Library, LibraryBook, User, Review };
