@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { Sequelize } from 'sequelize';
 import { checkFoundBook } from '../errors/checkErros';
-import { Book, Genre } from '../models/association.model';
+import { Book, Genre, Review } from '../models/association.model';
 import { paramsIdSchema } from '../schemas/params.schema';
 
 export const bookController = {
@@ -24,9 +24,15 @@ export const bookController = {
     const parsedData = paramsIdSchema.parse(req.params);
     const oneBook = await Book.findOne({
       where: { id: parsedData.id },
-      include: {
-        model: Genre,
-      },
+      include: [
+        {
+          model: Genre,
+        },
+        {
+          model: Review,
+          include: ['User'],
+        },
+      ],
     });
 
     checkFoundBook(oneBook);
