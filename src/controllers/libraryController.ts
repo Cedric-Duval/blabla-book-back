@@ -21,18 +21,13 @@ import {
 } from '../schemas/library.schema';
 import { paramsIdSchema } from '../schemas/params.schema';
 import { userIdSchema } from '../schemas/user.schema';
+import type { IAuthenticatedRequest } from '../types/authenticatedRequest';
 import { checkPassword } from '../utils/authUtils';
-
-interface AuthenticatedRequest extends Request {
-  user: {
-    id: string;
-  };
-}
 
 export const libraryController = {
   //Get all the libraries from the user
   async getLibrariesWithoutBooksByUserId(
-    req: AuthenticatedRequest,
+    req: IAuthenticatedRequest,
     res: Response,
   ) {
     const parsedData = userIdSchema.parse({ id: req.user.id });
@@ -47,16 +42,18 @@ export const libraryController = {
 
   //Get all the libraries from the user
   async getLibrariesWithBooksByUserId(
-    req: AuthenticatedRequest,
+    req: IAuthenticatedRequest,
     res: Response,
   ) {
     const parsedData = userIdSchema.parse({ id: req.user.id });
     const userLibraries = await Library.findAll({
       where: { user_id: parsedData.id },
-      include: {
-        model: Book,
-        include: Genre,
-      },
+      include: [
+        {
+          model: Book,
+          include: [Genre],
+        },
+      ],
     });
 
     //checkFoundLibrary(userLibraries[0]);
@@ -78,7 +75,7 @@ export const libraryController = {
     res.status(200).json(userLibrary);
   },
 
-  async createNewLibrary(req: AuthenticatedRequest, res: Response) {
+  async createNewLibrary(req: IAuthenticatedRequest, res: Response) {
     const inputData = req.body;
     inputData.user_id = req.user.id;
 
@@ -99,14 +96,14 @@ export const libraryController = {
     res.status(200).json(userLibrary);
   },
 
-  async deleteLibrary(req: Request, res: Response) {
-    console.log(req.user?.id);
+  async deleteLibrary(req: IAuthenticatedRequest, res: Response) {
+    console.log(req.user.id);
     const parsedData = paramsIdSchema.parse(req.params);
     const userLibrary = await Library.findByPk(parsedData.id);
 
     checkFoundLibrary(userLibrary);
 
-    const parsedUserData = userIdSchema.parse({ id: req.user?.id });
+    const parsedUserData = userIdSchema.parse({ id: req.user.id });
     const user = await User.findByPk(parsedUserData.id);
 
     checkFoundUser(user);
@@ -115,10 +112,10 @@ export const libraryController = {
 
     const deleteData = req.body;
 
-    await checkPassword(deleteData.currentPassword, user.password);
+    await checkPassword(deleteData.currentPassword, user!.password);
 
     //Check if the user is the owner of the library
-    if (userLibrary.user_id !== user.id) {
+    if (userLibrary?.user_id !== user?.id) {
       return res.status(403).json({
         message: "Vous n'êtes pas autorisé à supprimer cette bibliothèque.",
       });
@@ -169,7 +166,7 @@ export const libraryController = {
     res.status(200).json(newLibrary);
   },
 
-  async editBookStatus(req: AuthenticatedRequest, res: Response) {
+  async editBookStatus(req: IAuthenticatedRequest, res: Response) {
     const parsedId = userIdSchema.parse({ id: req.user.id });
     const parsedData = bookAndLibrarySchema.parse(req.params);
 
@@ -188,16 +185,18 @@ export const libraryController = {
 
     const currentLibrary = await Library.findAll({
       where: { user_id: parsedId.id },
-      include: {
-        model: Book,
-        include: Genre,
-      },
+      include: [
+        {
+          model: Book,
+          include: [Genre],
+        },
+      ],
     });
 
     res.status(200).json(currentLibrary);
   },
 
-  async deleteBook(req: AuthenticatedRequest, res: Response) {
+  async deleteBook(req: IAuthenticatedRequest, res: Response) {
     const parsedData = bookAndLibrarySchema.parse(req.params);
     const parsedId = userIdSchema.parse({ id: req.user.id });
 
@@ -221,7 +220,7 @@ export const libraryController = {
     res.status(200).json(userLibraries);
   },
 
-  async switchBookLibrary(req: AuthenticatedRequest, res: Response) {
+  async switchBookLibrary(req: IAuthenticatedRequest, res: Response) {
     const parsedId = userIdSchema.parse({ id: req.user.id });
     const parsedData = switchBookLibrarySchema.parse(req.params);
 
@@ -245,10 +244,12 @@ export const libraryController = {
 
     const currentLibrary = await Library.findAll({
       where: { user_id: parsedId.id },
-      include: {
-        model: Book,
-        include: Genre,
-      },
+      include: [
+        {
+          model: Book,
+          include: [Genre],
+        },
+      ],
     });
 
     res.status(200).json(currentLibrary);

@@ -1,20 +1,21 @@
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import { checkExistingBook, checkFoundBook } from '../errors/checkErros';
 import { UnauthorizedError } from '../errors/customErrors';
 import { Book, LibraryBook, User } from '../models/association.model';
 import { createBookSchema, editBookSchema } from '../schemas/book.schema';
 import { paramsIdSchema } from '../schemas/params.schema';
 import { userIdSchema } from '../schemas/user.schema';
+import type { IAuthenticatedRequest } from '../types/authenticatedRequest';
 
 export const adminController = {
-  async createBook(req: Request, res: Response) {
+  async createBook(req: IAuthenticatedRequest, res: Response) {
     const parsedUser = userIdSchema.parse({ id: req.user.id });
 
     const user = await User.findByPk(parsedUser.id, {
       attributes: { exclude: ['password'] },
     });
 
-    if (!user.admin) {
+    if (!user?.admin) {
       throw new UnauthorizedError('Role admin manquant', 'admin');
     }
 
@@ -29,14 +30,14 @@ export const adminController = {
     res.status(201).json(newBook);
   },
 
-  async editBook(req: Request, res: Response) {
+  async editBook(req: IAuthenticatedRequest, res: Response) {
     const parsedUser = userIdSchema.parse({ id: req.user.id });
 
     const user = await User.findByPk(parsedUser.id, {
       attributes: { exclude: ['password'] },
     });
 
-    if (!user.admin) {
+    if (!user?.admin) {
       throw new UnauthorizedError('Role admin manquant', 'admin');
     }
 
@@ -50,14 +51,14 @@ export const adminController = {
     res.status(200).json(currentBook);
   },
 
-  async deleteBook(req: Request, res: Response) {
+  async deleteBook(req: IAuthenticatedRequest, res: Response) {
     const parsedUser = userIdSchema.parse({ id: req.user.id });
 
     const user = await User.findByPk(parsedUser.id, {
       attributes: { exclude: ['password'] },
     });
 
-    if (!user.admin) {
+    if (!user?.admin) {
       throw new UnauthorizedError('Role admin manquant', 'admin');
     }
 
@@ -66,13 +67,11 @@ export const adminController = {
 
     checkFoundBook(currentBook);
 
-  
-
-    await currentBook.setGenres([]);
+    await currentBook?.setGenres([]);
     await LibraryBook.destroy({ where: { book_id: parsedParams.id } });
     await Book.destroy({
       where: {
-        id: parsedParams.id
+        id: parsedParams.id,
       },
     });
 

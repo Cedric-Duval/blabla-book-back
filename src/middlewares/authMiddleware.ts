@@ -1,16 +1,19 @@
+import type { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { checkFoundToken, checkFoundUser } from '../errors/checkErros';
+import { checkFoundUser } from '../errors/checkErros';
 import { UnauthorizedError } from '../errors/customErrors';
 import { User } from '../models/association.model';
 
 export const authMiddleware = {
-  async authorization(req, res, next) {
+  async authorization(req: Request, res: Response, next: NextFunction) {
     const token = req.headers.authorization?.split(' ')[1];
 
-    checkFoundToken(token);
+    if (!token) {
+      throw new UnauthorizedError('Token manquant', 'token');
+    }
 
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
       const user = await User.findByPk(decoded.id);
 
       checkFoundUser(user);
