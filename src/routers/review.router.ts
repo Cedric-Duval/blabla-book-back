@@ -7,7 +7,7 @@ export const reviewRouter = Router();
 
 // Authenticated : Get all the reviews from a book and create a review
 reviewRouter
-  .route('/book/:bookId/reviews')
+  .route('/book/:bookId/review')
   .get(authMiddleware.authorization, wrapController(reviewController.getReviewsForBook))
   .post(authMiddleware.authorization, wrapController(reviewController.createReview));
 
