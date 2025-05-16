@@ -130,3 +130,9 @@ Content-Type: application/json
     "confirmPassword": "test",
     "currentPassword": "test7"
 }
+
+
+
+//----------------------------------------------------GENRES--------------------------------------------------
+### Get all genres
+GET http://localhost:3000/genres
