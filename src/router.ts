@@ -5,6 +5,7 @@ import { booksRouter } from './routers/books.router';
 import { genresRouter } from './routers/genre.router';
 import { librariesRouter } from './routers/libraries.router';
 import { userRouter } from './routers/user.router';
+import { reviewRouter } from './routers/review.router';
 
 export const router = Router();
 
@@ -14,3 +15,4 @@ router.use(librariesRouter);
 router.use(authRouter);
 router.use(userRouter);
 router.use(genresRouter);
+router.use(reviewRouter);
