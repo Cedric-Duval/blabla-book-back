@@ -3,7 +3,7 @@ import { checkExistingBook, checkFoundBook } from '../errors/checkErros';
 import { UnauthorizedError } from '../errors/customErrors';
 import { Book, Genre, LibraryBook, User } from '../models/association.model';
 import { createBookSchema, editBookSchema } from '../schemas/book.schema';
-import { genresSchema } from '../schemas/genre.schema';
+import { genresSchema, genresUpdateSchema } from '../schemas/genre.schema';
 import { paramsIdSchema } from '../schemas/params.schema';
 import { userIdSchema } from '../schemas/user.schema';
 import type { IAuthenticatedRequest } from '../types/authenticatedRequest';
@@ -35,11 +35,6 @@ export const adminController = {
 
     const newBook = await Book.create(parsedData);
 
-    console.log('-------test');
-    console.log(newBook);
-    console.log('-------test2');
-    console.log(parsedGenres.genre1);
-
     if (parsedGenres.genre2 && parsedGenres.genre2 !== parsedGenres.genre1) {
       await newBook.setGenres([parsedGenres.genre1, parsedGenres.genre2]);
     } else {
@@ -49,9 +44,6 @@ export const adminController = {
     const bookWithGenres = await Book.findByPk(newBook.id, {
       include: Genre,
     });
-
-    console.log('-------test3');
-    console.log(JSON.stringify(bookWithGenres, null, 2));
 
     res.status(201).json(newBook);
   },
@@ -73,7 +65,31 @@ export const adminController = {
 
     checkFoundBook(currentBook);
 
+    let parsedGenres = {};
+    if (req.body.genre1 !== '' && req.body.genre2 !== '') {
+      parsedGenres = genresUpdateSchema.parse({
+        genre1: req.body.genre1,
+        genre2: req.body.genre2,
+      });
+    } else if (req.body.genre1 !== '') {
+      parsedGenres = genresUpdateSchema.parse({
+        genre1: req.body.genre1,
+      });
+    }
+
     await currentBook?.update(parsedData);
+
+    if (parsedGenres.genre2 && parsedGenres.genre2 !== parsedGenres.genre1) {
+      await currentBook?.setGenres([parsedGenres.genre1, parsedGenres.genre2]);
+    } else if (parsedGenres.genre1) {
+      await currentBook?.setGenres([parsedGenres.genre1]);
+    }
+
+    const newcurrentBook = await Book.findByPk(parsedParams.id, {
+      include: [Genre],
+    });
+    console.log(JSON.stringify(newcurrentBook, null, 2));
+
     res.status(200).json(currentBook);
   },
 
