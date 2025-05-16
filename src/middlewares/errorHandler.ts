@@ -1,7 +1,13 @@
+import type { NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
 import { AppError } from '../errors/customErrors';
 
-export const errorHandler = (err, req, res, next) => {
+export const errorHandler = (
+  err,
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   if (err instanceof ZodError) {
     const zodErrors = err.errors.map((e) => ({
       field: e.path.join('.'),
