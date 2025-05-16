@@ -1,7 +1,9 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from './sequelize.client';
 
-export class Library extends Model {}
+export class Library extends Model {
+  id: unknown;
+}
 
 Library.init(
   {

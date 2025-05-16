@@ -1,7 +1,11 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from './sequelize.client';
 
-export class User extends Model {}
+export class User extends Model {
+  password(currentPassword: any, password: any) {
+    throw new Error('Method not implemented.');
+  }
+}
 
 User.init(
   {

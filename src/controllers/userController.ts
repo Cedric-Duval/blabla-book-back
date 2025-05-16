@@ -1,27 +1,24 @@
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import { checkConfirmPassword, checkFoundUser } from '../errors/checkErros';
 import { User } from '../models/association.model';
 import { Library } from '../models/association.model';
 import { Book } from '../models/association.model';
 import { LibraryBook } from '../models/association.model.js';
 import { userDatasUpdate, userIdSchema } from '../schemas/user.schema';
+import type { IAuthenticatedRequest } from '../types/authenticatedRequest';
 import { checkPassword, hashPassword } from '../utils/authUtils';
 
-interface AuthenticatedRequest extends Request {
-  user: {
-    id: string;
-  };
-}
-
 export const userController = {
-  async getUserDatas(req: AuthenticatedRequest, res: Response) {
+  async getUserDatas(req: IAuthenticatedRequest, res: Response) {
     const parsedData = userIdSchema.parse({ id: req.user.id });
     const user = await User.findByPk(parsedData.id, {
       attributes: { exclude: ['password'] },
-      include: {
-        model: Library,
-        include: Book,
-      },
+      include: [
+        {
+          model: Library,
+          include: [Book],
+        },
+      ],
     });
 
     checkFoundUser(user);
@@ -29,7 +26,7 @@ export const userController = {
     res.status(200).json(user);
   },
 
-  async updateUserDatas(req: AuthenticatedRequest, res: Response) {
+  async updateUserDatas(req: IAuthenticatedRequest, res: Response) {
     const parsedData = userIdSchema.parse({ id: req.user.id });
     const updatedDatas = req.body;
 
@@ -40,9 +37,7 @@ export const userController = {
     const user = await User.findByPk(parsedData.id);
     checkFoundUser(user);
 
-    console.log(user);
-
-    await checkPassword(updatedDatas.currentPassword, user.password);
+    await checkPassword(updatedDatas.currentPassword, user!.password!);
 
     if (updatedDatas.newPassword) {
       checkConfirmPassword(
@@ -54,14 +49,14 @@ export const userController = {
       updatedDatas.password = hashedPassword;
     }
 
-    const currentUser = await user.update(updatedDatas);
+    const currentUser = await user!.update(updatedDatas);
     const { password, ...safeUser } = currentUser.get({ plain: true });
 
     res.status(200).json(safeUser);
   },
 
-  async deleteUserDatas(req, res) {
-    const parsedData = userIdSchema.parse({ id: req.user?.id });
+  async deleteUserDatas(req: IAuthenticatedRequest, res: Response) {
+    const parsedData = userIdSchema.parse({ id: req.user.id });
 
     const deleteData = req.body;
 
@@ -74,7 +69,7 @@ export const userController = {
       },
     });
 
-    await checkPassword(deleteData.currentPassword, user.password);
+    await checkPassword(deleteData.currentPassword, user!.password);
     checkConfirmPassword(
       deleteData.currentPassword,
       deleteData.confirmPassword,
