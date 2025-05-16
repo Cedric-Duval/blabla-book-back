@@ -3,7 +3,7 @@ import { checkExistingBook, checkFoundBook } from '../errors/checkErros';
 import { UnauthorizedError } from '../errors/customErrors';
 import { Book, Genre, LibraryBook, User } from '../models/association.model';
 import { createBookSchema, editBookSchema } from '../schemas/book.schema';
-import { genresSchema, genresUpdateSchema } from '../schemas/genre.schema';
+import { genresUpdateSchema } from '../schemas/genre.schema';
 import { paramsIdSchema } from '../schemas/params.schema';
 import { userIdSchema } from '../schemas/user.schema';
 import type { IAuthenticatedRequest } from '../types/authenticatedRequest';
@@ -28,10 +28,17 @@ export const adminController = {
 
     checkExistingBook(existingBook);
 
-    const parsedGenres = genresSchema.parse({
-      genre1: req.body.genre1,
-      genre2: req.body.genre2,
-    });
+    let parsedGenres = {};
+    if (req.body.genre2 !== '') {
+      parsedGenres = genresUpdateSchema.parse({
+        genre1: req.body.genre1,
+        genre2: req.body.genre2,
+      });
+    } else {
+      parsedGenres = genresUpdateSchema.parse({
+        genre1: req.body.genre1,
+      });
+    }
 
     const newBook = await Book.create(parsedData);
 
