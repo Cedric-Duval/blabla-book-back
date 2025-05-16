@@ -31,30 +31,36 @@ export const userController = {
 
   async updateUserDatas(req: AuthenticatedRequest, res: Response) {
     const parsedData = userIdSchema.parse({ id: req.user.id });
-    const updatedDatas = req.body;
+    const updatedData = req.body;
 
-    if (updatedDatas.name != null) {
-      await userDatasUpdate.parseAsync(updatedDatas);
+    console.log(updatedData);
+
+    const filteredData = Object.fromEntries(
+      Object.entries(updatedData).filter(([__, value]) => value != null)
+    );
+
+    if (filteredData.name != null) {
+      await userDatasUpdate.parseAsync(filteredData);
     }
-
+    
     const user = await User.findByPk(parsedData.id);
     checkFoundUser(user);
 
     console.log(user);
 
-    await checkPassword(updatedDatas.currentPassword, user.password);
+    await checkPassword(filteredData.currentPassword, user.password);
 
-    if (updatedDatas.newPassword) {
+    if (filteredData.newPassword) {
       checkConfirmPassword(
-        updatedDatas.newPassword,
-        updatedDatas.confirmPassword,
+        filteredData.newPassword,
+        filteredData.confirmPassword,
       );
 
-      const hashedPassword = await hashPassword(updatedDatas.newPassword);
-      updatedDatas.password = hashedPassword;
+      const hashedPassword = await hashPassword(filteredData.newPassword);
+      filteredData.password = hashedPassword;
     }
 
-    const currentUser = await user.update(updatedDatas);
+    const currentUser = await user.update(filteredData);
     const { password, ...safeUser } = currentUser.get({ plain: true });
 
     res.status(200).json(safeUser);
