@@ -83,8 +83,8 @@ export const userController = {
       deleteData.confirmPassword,
     );
 
-    for (const library of libraries) {
-      await LibraryBook.destroy({ where: { library_id: library.id } });
+    for (const library of libraries) {   
+      await LibraryBook.destroy({ where: { library_id: library.dataValues.id } });
       await library.destroy();
     }
 
