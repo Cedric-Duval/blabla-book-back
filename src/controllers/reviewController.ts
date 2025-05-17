@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Review, Book, User } from '../models/association.model';
-import { checkFoundBook } from '../errors/checkErros';
+import { checkFoundBook, checkFoundUser, checkExistingReview } from '../errors/checkErros';
 
 export const reviewController = {
   async getReviewsForBook(req: Request, res: Response) {
@@ -21,21 +21,49 @@ export const reviewController = {
     res.status(200).json(reviews);
   },
 
+  async getReviewsFromUser(req: Request, res: Response) {
+    const userId = req.user.id;
+
+    const user = await User.findByPk(userId);
+    checkFoundUser(user);
+
+    const reviews = await Review.findAll({
+      where: { user_id: userId },
+      include: {
+        model: Book,
+      },
+      order: [['createdAt', 'DESC']],
+    });
+
+    res.status(200).json(reviews);
+  },
+
+  
+
   async createReview(req: Request, res: Response) {
     const { bookId } = req.params;
     const { content, rating } = req.body;
+    const userId = req.user.id;
 
     const book = await Book.findByPk(bookId);
     checkFoundBook(book);
 
-    const review = await Review.create({
+    const review = await Review.findOne({
+      where: {
+        user_id: userId,
+        book_id: bookId,
+      },
+    });
+    checkExistingReview(review);
+
+    const newReview = await Review.create({
       content,
       rating,
-      user_id: req.user.id,
+      user_id: userId,
       book_id: bookId,
     });
 
-    res.status(201).json(review);
+    res.status(201).json(newReview);
   },
 
   async updateReview(req: Request, res: Response) {

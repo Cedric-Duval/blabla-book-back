@@ -1,6 +1,6 @@
 import type { Response } from 'express';
 import { checkConfirmPassword, checkFoundUser } from '../errors/checkErros';
-import { User } from '../models/association.model';
+import { Review, User } from '../models/association.model';
 import { Library } from '../models/association.model';
 import { Book } from '../models/association.model';
 import { LibraryBook } from '../models/association.model.js';
@@ -18,6 +18,10 @@ export const userController = {
           model: Library,
           include: [Book],
         },
+        {
+          model: Review,
+          include: [Book],
+        }
       ],
     });
 
