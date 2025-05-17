@@ -72,7 +72,8 @@ CREATE TABLE "review" (
  "user_id" integer NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
  "book_id" integer NOT NULL REFERENCES "book"("id") ON DELETE CASCADE,
  "createdAt" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
- "updatedAt" timestamptz
+ "updatedAt" timestamptz,
+ UNIQUE ("user_id", "book_id")
 );
 
 
