@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { Sequelize } from 'sequelize';
 import { checkFoundBook } from '../errors/checkErros';
-import { Book, Genre, Review } from '../models/association.model';
+import { Book, Genre, Review, User } from '../models/association.model';
 import { paramsIdSchema } from '../schemas/params.schema';
 
 export const bookController = {
@@ -30,7 +30,16 @@ export const bookController = {
         },
         {
           model: Review,
-          include: ['User'],
+          include: [
+            {
+              model: User, 
+              attributes: [
+                'id', 
+                'firstname', 
+                'name'
+              ]
+            }
+          ]
         },
       ],
     });
