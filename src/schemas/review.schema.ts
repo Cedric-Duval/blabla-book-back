@@ -19,3 +19,14 @@ export const reviewSchema = z
             .transform(Number),
     }
 )
+.partial();
+
+export const paramsReviewIdSchema = z
+.object(
+    {
+        id: z
+            .string()
+            .regex(/^[1-9]\d*$/, { message: "Format d'url invalide" })
+            .transform(Number),
+    }
+);

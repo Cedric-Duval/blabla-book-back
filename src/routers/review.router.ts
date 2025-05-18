@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { reviewController } from '../controllers/reviewController.ts';
+import { reviewController } from '../controllers/reviewController';
 import { authMiddleware } from '../middlewares/authMiddleware';
 import { wrapController } from '../middlewares/wrapController';
 
@@ -7,7 +7,7 @@ export const reviewRouter = Router();
 
 // Authenticated : Get all the reviews from a book and create a review
 reviewRouter
-  .route('/book/:bookId/review')
+  .route('/book/:id/review')
   .get(authMiddleware.authorization, wrapController(reviewController.getReviewsForBook))
   .post(authMiddleware.authorization, wrapController(reviewController.createReview));
 

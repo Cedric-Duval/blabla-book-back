@@ -1,13 +1,15 @@
 import { Request, Response } from 'express';
 import { Review, Book, User } from '../models/association.model';
 import { checkFoundBook, checkFoundUser, checkExistingReview } from '../errors/checkErros';
+import { paramsReviewIdSchema } from '../schemas/review.schema';
 import { paramsIdSchema } from '../schemas/params.schema';
 import { userIdSchema } from '../schemas/user.schema';
 import { reviewSchema } from '../schemas/review.schema';
+import { IAuthenticatedRequest } from '../types/authenticatedRequest';
 
 export const reviewController = {
   async getReviewsForBook(req: Request, res: Response) {
-    const parsedBook = paramsIdSchema.parse(req.params);
+    const parsedBook = paramsReviewIdSchema.parse(req.params);
 
     const book = await Book.findByPk(parsedBook.id);
     checkFoundBook(book);
@@ -43,9 +45,9 @@ export const reviewController = {
 
   
 
-  async createReview(req: Request, res: Response) {
+  async createReview(req: IAuthenticatedRequest, res: Response) {
     const parsedBook = paramsIdSchema.parse(req.params);
-    const parsedUser = userIdSchema.parse(req.user.id);
+    const parsedUser = userIdSchema.parse({ id: req.user.id });
     const parsedData = reviewSchema.parse(req.body);
 
     const book = await Book.findByPk(parsedBook.id);
@@ -57,6 +59,7 @@ export const reviewController = {
         book_id: parsedBook.id,
       },
     });
+    console.log(review)
     checkExistingReview(review);
 
     const newReview = await Review.create({
@@ -69,12 +72,13 @@ export const reviewController = {
     res.status(201).json(newReview);
   },
 
-  async updateReview(req: Request, res: Response) {
-    const parsedReview = paramsIdSchema.parse(req.params);
-    const parsedUser = userIdSchema.parse(req.user.id);
+  async updateReview(req: IAuthenticatedRequest, res: Response) {
+    const parsedReview = paramsReviewIdSchema.parse(req.params);
+    const parsedUser = userIdSchema.parse({ id: req.user.id });
     const parsedData = reviewSchema.parse(req.body);
 
     const review = await Review.findByPk(parsedReview.id);
+    console.log(review)
     if (!review || review.user_id !== parsedUser.id) {
       return res.status(403).json({ error: 'Cette review n\'existe pas ou alors vous n\'êtes pas autorisé à la modifier.' });
     }
@@ -87,8 +91,10 @@ export const reviewController = {
   },
 
   async deleteReview(req: Request, res: Response) {
-    const parsedReview = paramsIdSchema.parse(req.params);
-    const parsedUser = userIdSchema.parse(req.user.id);
+    const parsedReview = paramsReviewIdSchema.parse(req.params);
+    const parsedUser = userIdSchema.parse({ id: req.user.id });
+
+    console.log(parsedReview, parsedUser);
 
     const review = await Review.findByPk(parsedReview.id);
     if (!review || review.user_id !== parsedUser.id) {
@@ -96,6 +102,6 @@ export const reviewController = {
     }
 
     await review.destroy();
-    res.status(204).send();
+    res.status(200).json({ message: 'Review supprimée avec succès'});
   },
 };
