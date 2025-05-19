@@ -20,7 +20,10 @@ export const adminController = {
       throw new UnauthorizedError('Role admin manquant', 'admin');
     }
 
+    console.log(req.body);
+
     const parsedData = createBookSchema.parse(req.body);
+
 
     const existingBook = await Book.findOne({
       where: { isbn: parsedData.isbn },

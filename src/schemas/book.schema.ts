@@ -4,9 +4,9 @@ import { z } from 'zod';
 const commonBookSchema = {
   isbn: z
     .string()
-    .regex(/^[1-9]\d*$/)
+    .regex(/^[0-9]\d*$/, { message: "L'ISBN doit commencer par un chiffre"})
     .max(100, { message: "L'ISBN est trop long" })
-    .min(9, { message: "L'ISBN est requis" })
+    .min(9, { message: "L'ISBN est trop court" })
     .transform((data) => sanitizeHtml(data.trim())),
   title: z
     .string()
