@@ -3,8 +3,8 @@ import { z } from 'zod';
 
 const commonBookSchema = {
   isbn: z
-    .string()
-    .regex(/^[1-9]\d*$/)
+    .string({message: "L'ISBN doit être un nombre"})
+    .regex(/^[0-9]\d*$/)
     .max(100, { message: "L'ISBN est trop long" })
     .min(9, { message: "L'ISBN est requis" })
     .transform((data) => sanitizeHtml(data.trim())),
