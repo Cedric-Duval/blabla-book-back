@@ -1,8 +1,8 @@
 import type { Book } from '../models/book.model';
 import type { Library } from '../models/library.model';
 import type { LibraryBook } from '../models/library_book.model';
+import type { Review } from '../models/review.model';
 import type { User } from '../models/user.model';
-import { Review } from '../models/review.model';
 import {
   BadRequestError,
   NotFoundError,
@@ -80,13 +80,16 @@ export function checkConfirmPassword(newPwd: string, confirmPwd: string) {
   if (newPwd !== confirmPwd) {
     throw new BadRequestError(
       'Les mots de passe ne sont pas identiques',
-      'confirmPassword'
+      'confirmPassword',
     );
   }
 }
 
 export function checkExistingReview(data: Review | null) {
   if (data) {
-    throw new BadRequestError('Vous avez déjà laissez un avis sur ce livre', 'review');
+    throw new BadRequestError(
+      'Vous avez déjà laissez un avis sur ce livre',
+      'review',
+    );
   }
 }
