@@ -1,5 +1,5 @@
 import type { Response } from 'express';
-import { checkExistingBook, checkFoundBook } from '../errors/checkErros';
+import { checkConfirmPassword, checkExistingBook, checkFoundBook } from '../errors/checkErros';
 import { UnauthorizedError } from '../errors/customErrors';
 import { Book, Genre, LibraryBook, User } from '../models/association.model';
 import { createBookSchema, editBookSchema } from '../schemas/book.schema';
@@ -7,6 +7,7 @@ import { genresUpdateSchema } from '../schemas/genre.schema';
 import { paramsIdSchema } from '../schemas/params.schema';
 import { userIdSchema } from '../schemas/user.schema';
 import type { IAuthenticatedRequest } from '../types/authenticatedRequest';
+import { checkPassword } from '../utils/authUtils';
 
 export const adminController = {
   async createBook(req: IAuthenticatedRequest, res: Response) {
@@ -100,12 +101,14 @@ export const adminController = {
     res.status(200).json(currentBook);
   },
 
+  
   async deleteBook(req: IAuthenticatedRequest, res: Response) {
+    
     const parsedUser = userIdSchema.parse({ id: req.user.id });
 
-    const user = await User.findByPk(parsedUser.id, {
-      attributes: { exclude: ['password'] },
-    });
+    const user = await User.findByPk(parsedUser.id);
+
+    await checkPassword(req.body.password, user.password);
 
     if (!user?.admin) {
       throw new UnauthorizedError('Role admin manquant', 'admin');
