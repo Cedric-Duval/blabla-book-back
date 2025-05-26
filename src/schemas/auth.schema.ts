@@ -26,7 +26,7 @@ export const createUser = z.object({
   email: z
     .string()
     .email({ message: 'Email invalide' })
-    .transform((data) => sanitizeHtml(data.trim())),
+    .transform((data) => sanitizeHtml(data.trim().toLowerCase())),
   password: z
     .string()
     .regex(
