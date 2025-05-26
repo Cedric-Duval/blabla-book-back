@@ -1,11 +1,17 @@
 import fs from 'node:fs';
 import https from 'node:https';
-import path from 'node:path';
 import app from './app';
+import 'dotenv/config';
 
 const options = {
-  key: fs.readFileSync(path.join(__dirname, 'localhost-key.pem')),
-  cert: fs.readFileSync(path.join(__dirname, 'localhost.pem')),
+  key: fs.readFileSync(
+    '/etc/letsencrypt/live/williamdodart-server.eddi.cloud/privkey.pem',
+    'utf8',
+  ),
+  cert: fs.readFileSync(
+    '/etc/letsencrypt/live/williamdodart-server.eddi.cloud/fullchain.pem',
+    'utf8',
+  ),
 };
 
 const port = 443;
